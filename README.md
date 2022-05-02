@@ -6,7 +6,7 @@ It can help your use the device easily
 All you need to do is type in a concise line of commands,It can take care of everything
 
 ## Installation method
-pip install HOPYBOX
+pip install HOPYBOX\n
 pip install -U HOPYBOX
 
 ## Import method
