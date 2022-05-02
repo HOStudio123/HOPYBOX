@@ -1,4 +1,4 @@
-#HOPYBOX
+#
 
 This is an open source, practical and exquisite command box
 So I named it 'hopybox'
