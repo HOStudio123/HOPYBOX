@@ -1,3 +1,5 @@
 from platform import system,python_version
-version = 'HOPYBOX 1.4.0 (default, May 1 2022, 9:25:11)\n[Python {}] on {}\nType "help" for more information'.format(python_version(),system())
-version_number = 14000
+version_number = 124
+version_type = 'default'
+#version_type = 'Beta'
+version = 'HOPYBOX 1.2.4 ({}, May 8 2022, 12:24:56)\n[Python {}] on {}\nType "help" or "license" for more information'.format(version_type,python_version(),system())
