@@ -45,7 +45,7 @@ $ pip install -U HOPYBOX
 $ pip install -U hopybox
 ```
 ```sh
-HOPYBOX/Command:install HOPYBOX
+\033[92mHOPYBOX/Command:\033[0minstall HOPYBOX
 ```
 ```sh
 HOPYBOX/Command:install hopybox
