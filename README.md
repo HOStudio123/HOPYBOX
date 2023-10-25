@@ -35,7 +35,7 @@ HOPYBOX/Command:help
 ## Update version
 Enter in the `HOPYBOX` console:
 ```sh
-HOPYBOX/Command:check version
+HOPYBOX/Command:update
 ```
 or like these
 ```sh
@@ -45,10 +45,10 @@ $ pip install -U HOPYBOX
 $ pip install -U hopybox
 ```
 ```sh
-HOPYBOX/Command:install HOPYBOX
+HOPYBOX/Python:install HOPYBOX
 ```
 ```sh
-HOPYBOX/Command:install hopybox
+HOPYBOX/Python:install hopybox
 ```
 ## Github
 [HOStudio123](https://github.com/HOStudio123)
