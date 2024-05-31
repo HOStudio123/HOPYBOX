@@ -44,12 +44,6 @@ $ pip install -U HOPYBOX
 ```sh
 $ pip install -U hopybox
 ```
-```sh
-HOPYBOX/Python:install HOPYBOX
-```
-```sh
-HOPYBOX/Python:install hopybox
-```
 ## Github
 [HOStudio123](https://github.com/HOStudio123)
 ## Email
