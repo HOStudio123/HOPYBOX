@@ -24,7 +24,7 @@ def format_file_size(size):
   return f"{size:.2f}".rstrip(".0").zfill(1)+unit[num]
 
 
-def walk_dir(path, tree, level=0) -> int:
+def walk_dir(path,tree,level=0):
   global max_level, no_recursion_calc
   try:
     listdir = os.listdir(path)
@@ -53,7 +53,7 @@ def walk_dir(path, tree, level=0) -> int:
       total_size += size
   return total_size
 
-def tree_dir(path, m_level=7):
+def tree(path,m_level=7):
   with console.status('\033[96mLoading paths …\033[0m'):
     global max_level, no_recursion_calc
     max_level = m_level

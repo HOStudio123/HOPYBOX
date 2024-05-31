@@ -1,63 +1,59 @@
-import os,pip
+import os
 import requests as visit
-from .hopter import Error_pta
-from .headers import headers_water
-from .LICENSE import license_print
-from .helps import helps_print
-from .copyright import copyright_print
 from rich.console import Console
-from rich.traceback import install
+from .prompt import tip_tick,tip_arrow,error_cross
 
-install(show_locals=True)
 console = Console()
-headers = headers_water()
 
-def systems(order):
-  print('\033[96m',end='\r')
-  os.system(order)
+def terminal(command):
+  os.system(command)
 
-def runpy(module):
-  print('\033[0m',end='\r')
-  os.system('python3 '+module)
+def run_py(file):
+  terminal(f'python3 {file}')
 
 def python():
-  os.system('python3')
+  terminal('python3')
 
-def install(modules):
-  print('\033[96m',end='\r')
-  os.system('python3 -m pip install -U {}'.format(modules))
+def install(module):
+  terminal(f'python3 -m pip install -U {module}')
 
-def uninstall(modules):
-  print('\033[96m',end='\r')
-  os.system('python3 -m pip uninstall {}'.format(modules))
-
-def all_help():
-  print(helps_print())
-
-def license():
-  print('\033[96m'+license_print())
-
-def copyright():
-  print('\033[96m'+copyright_print())
+def uninstall(module):
+  terminal(f'python3 -m pip uninstall {module}')
 
 def module_help(module):
-  print('\033[96m'+str(help(module)))
-  
-def pip_list():
-  print('\033[96m',end='\r')
-  os.system('pip list')
+  help(module)
 
 def clear_text():
   console.clear()
+  
+def this():
+  print('''\033[96mThe Zen of Python, by Tim Peters
 
-def update_tip():
-  print('\033[96mEnter update(version number) to get a changelog about the version object')
+Beautiful is better than ugly.
+Explicit is better than implicit.
+Simple is better than complex.
+Complex is better than complicated.
+Flat is better than nested.
+Sparse is better than dense.
+Readability counts.
+Special cases aren't special enough to break the rules.
+Although practicality beats purity.
+Errors should never pass silently.
+Unless explicitly silenced.
+In the face of ambiguity, refuse the temptation to guess.
+There should be one-- and preferably only one --obvious way to do it.
+Although that way may not be obvious at first unless you're Dutch.
+Now is better than never.
+Although never is often better than *right* now.
+If the implementation is hard to explain, it's a bad idea.
+If the implementation is easy to explain, it may be a good idea.
+Namespaces are one honking great idea -- let's do more of those!''')
 
 def debug(command):
   try:
-    print(eval(command))
+    eval(command)
   except Exception as e:
-    Error_pta('DebugError','Command',str(e),'debug '+command)
+    error_cross('DebugError','Command',str(e),f'debug {command}')
 
-def ipython():
-  os.system('ipython')
+
+    

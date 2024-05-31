@@ -1,8 +1,6 @@
 import os
 import ssl
 import wget
-import time
-import requests as visit
 from .headers import headers_water
 from .hopter import Error_pta,Tip_pta
 
@@ -14,6 +12,7 @@ def download(url):
   try:
     wget.download(url,'./')
     print('')
-    Tip_pta('Successfully downloaded this file')
+    download_path = os.getcwd()
+    Tip_pta('Download successful! The file is stored in '+download_path)
   except Exception as e:
-    Error_pta('DownloadError','Command',str(e),'download …')    
+    Error_pta('DownloadError','Command',str(e),'download'+url)    

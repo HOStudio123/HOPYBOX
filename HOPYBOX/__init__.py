@@ -1,29 +1,12 @@
 '''
-            Copyright (c) 2022 HOStudio123(ChenJinlin) ,
-                      All Rights Reserved.
+Copyright (c) 2022-2023 HOStudio123(ChenJinlin).
+All Rights Reserved.
+
+Please view help by visiting the website at https://hopybox.github.io.
+
 '''
-from platform import python_version
-from .hopter import Error_ptc
-from rich.console import Console
-from time import sleep
-import os
-python_code = python_version().split('.')
-console = Console()
-if int(python_code[0]) < 3:
-  print('E:Sorry, You python version is less than 3.8, and this program cannot be used.')
-elif int(python_code[1]) < 8:
-  print('E:Sorry, You python version is less than 3.8, and this procedure cannot be used.')
-else:
-  try:
-    from .__main__ import *
-  except Exception as e:
-    Error_ptc('Sorry,The program has an error and cannot continue to run',str(e))
-    print('\033[93mWARNING:The process is about to automatically restart … 3',end='\r')
-    sleep(1)
-    print('\033[93mWARNING:The process is about to automatically restart … 2',end='\r')
-    sleep(1)
-    print('\033[93mWARNING:The process is about to automatically restart … 1',end='\r')
-    sleep(1)
-    print('\033[93mWARNING:The process is about to automatically restart … 0',end='\r')
-    console.clear()
-    os.system('python3 -m hopybox')
+
+try:
+  from .__main__ import *
+except Exception as e:
+  print(f'\033[1;91mSorry,The program has an error and cannot continue to run , and you can report this problem to this email \033[1;93mhostudio.hopybox@foxmail.com\033[0m\n\033[1;96mReason for program failure:\n\033[0m\033[95m{e}\033[0m\n')

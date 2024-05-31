@@ -84,5 +84,5 @@ def triangle_caculate(nums):
 
 #Other calculations
 
-def pi_print():
+def pi():
   print('\033[92m'+str(math.pi))
