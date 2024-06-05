@@ -30,12 +30,12 @@ $ HOPYBOX
 ## Usage (How to use)
 See help built in the program
 ```sh
-HOPYBOX/Command:help
+HOPYBOX/Program:help
 ```
 ## Update version
 Enter in the `HOPYBOX` console:
 ```sh
-HOPYBOX/Command:update
+HOPYBOX/Program:update
 ```
 or like these
 ```sh
@@ -44,7 +44,3 @@ $ pip install -U HOPYBOX
 ```sh
 $ pip install -U hopybox
 ```
-## Github
-[HOStudio123](https://github.com/HOStudio123)
-## Email
-hostudio.hopybox@foxmail.com

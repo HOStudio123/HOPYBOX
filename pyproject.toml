@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "HOPYBOX"
+version = "1.7.2"
+authors = [{name = "HOStudio123(ChenJinlin)",email = "hostudio.hopybox@foxmail.com"}]
+license = {text = " GPL-3.0 license"}
+description = "This is an open source, practical command Python box."
+keywords = ["box", "ho", "py", "command", "terminal"]
+readme = {file = "README.md", content-type = "text/markdown"}
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11"
+]
+dependencies = [
+    "requests",
+    "filetype",
+    "yagmail",
+    "rich",
+    "bs4",
+    "chardet",
+    "psutil>=5.8.0"
+]    
+
+[project.urls]
+Homepage = "https://github.com/HOStudio123/HOPYBOX"
+Issues = "https://github.com/HOStudio123/HOPYBOX/issues"
+
+[project.scripts]
+hopybox = "hopybox.__main__:start"
+HOPYBOX = "hopybox.__main__:start"
