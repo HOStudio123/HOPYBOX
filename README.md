@@ -27,7 +27,7 @@ $ HOPYBOX
 ```python
 >>>import hopybox
 ```
-## Usage (How to use)
+## Usage
 See help built in the program
 ```sh
 HOPYBOX/Program:help
