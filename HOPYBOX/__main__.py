@@ -18,8 +18,6 @@ with Console().status("\033[96mLoading resources …\033[0m"):
   from platform import python_version
   # device
   from .device import device
-  # download
-  from .download import download
   # prompt
   from .prompt import error_cross
   from .prompt import tip_tick
@@ -49,6 +47,8 @@ with Console().status("\033[96mLoading resources …\033[0m"):
   from .basedtool import terminal
   from .basedtool import clear
   from .basedtool import char
+  # license
+  from .LICENSE import license
   # some information of hopybox
   __author__ = 'HOStudio123(ChenJinlin)'
   __email__ = 'hostudio.hopybox@foxmail.com'
@@ -60,11 +60,11 @@ with Console().status("\033[96mLoading resources …\033[0m"):
   # windows
   _windows = 0
   # version
-  _version_code = '1.7.0'
+  _version_code = '1.7.2'
   _version_type = 'default'
   _version_all = f'\033[95m* HOPYBOX Version {_version_code}\n* Python Version {python_version()}'
   # update time
-  _update_time = '14:15:16'
+  _update_time = '14:37:50'
   # command
   command_data_add()
   # start text

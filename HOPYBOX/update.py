@@ -46,6 +46,9 @@ update_log_add('1.6.5','Dec 23, 2022','* Fixed some known issues')
 update_log_add('1.6.6','Feb 3, 2023','* Fixed some known issues')
 update_log_add('1.6.7','Feb 3, 2023','* Fixed some known issues')
 update_log_add('1.7.0','Oct 10 2023','* Removed some commands\n* Add some new commands\n* Code structure optimization\n* Import method update\n* Fixed some known issues')
+update_log_add('1.7.1','Jun 1 2024','* Removed some commands\n* Add some new commands\n* Code structure optimization\n* Import method update\n* Fixed some known issues')
+update_log_add('1.7.2','Jun 1 2024','* Removed some commands\n* Add some new commands\n* Code structure optimization\n* Import method update\n* Fixed some known issues')
+
 
 def update_log_get(version):
   try:
@@ -60,11 +63,15 @@ def update_program():
     if update_version_number >= int(res.text):
       tip_tick('It is already the latest version')
     else:
-      if ask_proceed('There is a latest stable version discovered from PyPI'):
-        terminal('python3 -m pip install -U HOPYBOX')
-        clear()
-        terminal('python3 -m hopybox')
-      else:
-        pass
+      while True:
+        result = ask_proceed('There is a latest stable version discovered from PyPI')
+        if result == True:
+          terminal('python3 -m pip install -U HOPYBOX')
+          tip_tick('Please restart the program manually')
+          exit()
+        elif result == None:
+          continue
+        else:
+          break
   except Exception:
     error_cross('CheckError','Command','Failed to get update','check version')
