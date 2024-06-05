@@ -18,10 +18,17 @@ $ python -m hopybox
 ```
 or like these
 ```sh
+$ python -m HOPYBOX
+```
+```sh
 $ hopybox
 ```
 ```sh
 $ HOPYBOX
+```
+```python
+>>>import hopybox
+>>>hopybox.start()
 ```
 ## Import method
 ```python
