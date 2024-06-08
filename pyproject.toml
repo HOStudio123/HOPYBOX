@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "HOPYBOX"
-version = "1.7.2"
+version = "1.7.4"
 authors = [{name = "HOStudio123(ChenJinlin)",email = "hostudio.hopybox@foxmail.com"}]
 license = {text = " GPL-3.0 license"}
 description = "This is an open source, practical command Python box."
 keywords = ["box", "ho", "py", "command", "terminal"]
 readme = {file = "README.md", content-type = "text/markdown"}
-requires-python = ">=3.7"
+requires-python = ">=3.7.9"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Operating System :: OS Independent",
@@ -19,15 +19,15 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11"
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12"
 ]
 dependencies = [
     "requests",
-    "filetype",
+    "chardet>=5.2.0",
     "yagmail",
-    "rich",
+    "rich>=13.0.0",
     "bs4",
-    "chardet",
     "psutil>=5.8.0"
 ]    
 
