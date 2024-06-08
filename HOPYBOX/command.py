@@ -10,11 +10,20 @@ def command_data_add():
   _command_add('Program','help',"if 'run' in command_data[_mode]['help']:\n  print(command_help(_mode,command_data[_mode]['help']['run']))\nelse:\n  print(command_help(_mode,'help'))",'help {command}','Type help {command} for help about command')
   _command_add('Program','exit','exit()','exit','Exit the program')
   _command_add('Program','clear','clear()','clear','Clear console')
-  _command_add('Program','switch',"_switch(command_data['Program']['switch']['run'])",'switch {mode}','To switch program mode')
+  _command_add('Program','switch',"_switch(command_data['Program']['switch']['run'])",'switch {mode}','To switch running mode')
   _command_add('Device','help',"if command_data[_mode]['help']['run']:\n  print(command_help(_mode,command_data[_mode]['help']['run']))\nelse:\n  print(command_help(_mode,'help'))",'help {command}','Type help {command} for help about command')
   _command_add('Device','exit','exit()','exit','Exit the program')
   _command_add('Device','clear','clear()','clear','Clear console')
-  _command_add('Device','switch',"_switch(command_data['Device']['switch']['run'])",'switch {mode}','To switch program mode')
+  _command_add('Device','switch',"_switch(command_data['Device']['switch']['run'])",'switch {mode}','To switch running mode')
+  _command_add('Calculate','help',"if 'run' in command_data[_mode]['help']:\n  print(command_help(_mode,command_data[_mode]['help']['run']))\nelse:\n  print(command_help(_mode,'help'))",'help {command}','Type help {command} for help about command')
+  _command_add('Calculate','exit','exit()','exit','Exit the Calculate')
+  _command_add('Calculate','clear','clear()','clear','Clear console')
+  _command_add('Calculate','switch',"_switch(command_data['Calculate']['switch']['run'])",'switch {mode}','To switch running mode')
+  _command_add('File','help',"if 'run' in command_data[_mode]['help']:\n  print(command_help(_mode,command_data[_mode]['help']['run']))\nelse:\n  print(command_help(_mode,'help'))",'help {command}','Type help {command} for help about command')
+  _command_add('File','exit','exit()','exit','Exit the File')
+  _command_add('File','clear','clear()','clear','Clear console')
+  _command_add('File','switch',"_switch(command_data['File']['switch']['run'])",'switch {mode}','To switch running mode')
+  _command_add('Device','help',"if command_data[_mode]['help']['run']:\n  print(command_help(_mode,command_data[_mode]['help']['run']))\nelse:\n  print(command_help(_mode,'help'))",'help {command}','Type help {command} for help about command')
   # Program _command_add('Program','','','','')
   _command_add('Program','hoget',"hoget.main(command_data['Program']['hoget']['run'])",'hoget {URL}','To access website addresses')
   _command_add('Program','browser',"browser(command_data['Program']['browser']['run'])",'browser {URL}','Initiate your browser and visit url')
@@ -25,8 +34,9 @@ def command_data_add():
   _command_add('Program','version','print(_version_all)','version','Learn about program version')
   _command_add('Program','update','update_program()','update','To update the version')
   _command_add('Program','license',"print(license())",'license','To view the license')
-  _command_add('Program','feedback',"print('\033[96mIf you have any questions or suggestions, please contact the developer as\033[0m\033[1;95m hostudio.hopybox@foxmail.com')",'feedback','To get the way of feedback')
-  _command_add('Program','trans',{'-y':'translate.YouDao().trans(par_t,char(par_t)[1])'},[],[])
+  _command_add('Program','feedback',"print('\033[96mIf you have any questions or suggestions, please contact the developer as\033[0m\033[4;95m hostudio.hopybox@foxmail.com')",'feedback','To get the way of feedback')
+  _command_add('Program','email',"email(command_data['Program']['email']['run'])",'email {mail}','Send emails to people')
+  _command_add('Program','translate',{'-y':"translate.YouDao().output(translate.YouDao().trans(command_data['Program']['translate']['run'],char(command_data['Program']['translate']['run'])[1]))",'-g':"print(translate.Google().trans(command_data['Program']['translate']['run'],char(command_data['Program']['translate']['run'])[1]))"},['translate -y {text}','translate -g {text}'],['To translate the word into Chinese/English by YouDao','To translate the word into Chinese/English by Google'])
   # Device _command_add('Device','','','','')
   _command_add('Device','name','print(device.name())','name','To get the device name')
   _command_add('Device','type','print(device.type())','name','To get the device type')
@@ -36,12 +46,17 @@ def command_data_add():
   _command_add('Device','fps','print(device.Fps().fps())','fps','To get the device fps')
   _command_add('Device','timestamp','print(device.Time().timestamp())','timestamp','To get the device timestamp')
   _command_add('Device','time','print(device.Time().time_local())','time','To get the local time')
-def par(mode,command):
-  return command_data[mode][command]['run']
+  # Calculate _command_add('Calculate','','','','')
+  _command_add('Calculate','triangle',{'-a':"print(calculate.Triangle(float(command_data['Calculate']['triangle']['run'].split(' ')[0]),float(command_data['Calculate']['triangle']['run'].split(' ')[1]),float(command_data['Calculate']['triangle']['run'].split(' ')[2])).area)",'-p':"print(calculate.Triangle(float(command_data['Calculate']['triangle']['run'].split(' ')[0]),float(command_data['Calculate']['triangle']['run'].split(' ')[1]),float(command_data['Calculate']['triangle']['run'].split(' ')[2])).perimeter)"},['triangle -a {a} {b} {c}','triangle -p {a} {b} {c}'],['To calculate area','To calculate perimeter'])
+  _command_add('Calculate','circle',{'-a':"print(calculate.Circle(float(command_data['Calculate']['circle']['run'])).area)",'-p':"print(calculate.Circle(float(command_data['Calculate']['circle']['run'])).perimeter)",'-d':"print(calculate.Circle(float(command_data['Calculate']['circle']['run'])).diameter)"},['circle -a {radius}','circle -p {radius}','circle -d {radius}'],['To calculate area','To calculate perimeter','To calculate diameter'])
+  # File _command_add('File','','','','')
+  _command_add('File','tree',"tree(command_data['File']['tree']['run'])",'tree {path}','Drawing the file tree directory')
+  _command_add('File','open',"filetool(command_data['File']['open']['run']).view",'open {path}','Viewing the content of file')
+  _command_add('File','scan',"print(scanner(command_data['File']['scan']['run'].split(' ')[0],command_data['File']['scan']['run'].split(' ')[1]).scan_extension)",'scan {path} {extension}','Scanning the path')
 
 def command_help(mode,command):
   record = ''
-  if type(command_data[mode][command]['help']['operate'])!=type('string'):
+  if type(command_data[mode][command]['help']['operate']).__name__!='str':
     for i in range(len(command_data[mode][command]['help']['operate'])):
       operate = command_data[mode][command]['help']['operate'][i]
       details = command_data[mode][command]['help']['details'][i]

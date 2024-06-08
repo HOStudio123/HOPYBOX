@@ -1,90 +1,141 @@
 import os
-import os.path
-import filetype
-import zipfile,tarfile
 import time
+import chardet
+import zipfile
+import tarfile
 from rich import console,syntax
-from .hopter import error_cross,Error_ptb,Tip_pta
-from .tree_dir import tree
+from .prompt import error_cross
+from .prompt import tip_tick
+from .tree import tree
+
+language_types = {
+    ".py": "python",
+    ".js": "javascript",
+    ".java": "java",
+    ".c": "c",
+    ".cpp": "cpp",
+    ".cs": "csharp",
+    ".html": "html",
+    ".css": "css",
+    ".xml": "xml",
+    ".sql": "sql",
+    ".rb": "ruby",
+    ".php": "php",
+    ".swift": "swift",
+    ".go": "go",
+    ".rs": "rust",
+    ".pl": "perl",
+    ".ts": "typescript",
+    ".kt": "kotlin",
+    ".sh": "shell",
+    ".ps1": "powershell",
+    ".vb": "vbnet",
+    ".m": "objc",
+    ".r": "r",
+    ".matlab": "matlab",
+    ".asm": "asm",
+    ".dart": "dart",
+    ".scala": "scala",
+    ".lua": "lua",
+    ".groovy": "groovy",
+    ".coffee": "coffeescript",
+    ".lisp": "lisp",
+    ".hs": "haskell",
+    ".jl": "julia",
+    ".erl": "erlang",
+    ".clj": "clojure",
+    ".fs": "fsharp",
+    ".tcl": "tcl",
+    ".pp": "puppet",
+    ".awk": "awk",
+    ".md": "markdown",
+    ".yaml": "yaml",
+    ".yml": "yaml",
+    ".ini": "ini",
+    ".toml": "toml",
+    ".diff": "diff",
+    ".patch": "patch",
+    ".gitmessage": "git",
+    ".properties": "properties",
+    ".cxx":"cpp"
+}
+
+Console = console.Console()
 
 class Filetool:
-  def view():
-    pass
-
-filetool = Filetool()
-
-def read_file(filename):
-  if filename:
+  def __init__(self,path):
+    if os.path.isfile(r'%s' % path):
+      self.path = path
+    else:
+      raise FileNotFoundError
+  def main(self):
+    print('\033[92mName:{}')
+  @property
+  def view(self):
+    if self.extension in language_types:
+      file = open(self.path,'r',encoding=self.encoding)
+    else:
+      file = open(self.path,'rb')
+    content = file.read()
+    file.close()
+    if self.extension in language_types:
+      Console.print(syntax.Syntax(content,language_types[self.extension],theme='monokai', line_numbers=True))
+    else:
+      Console.print(syntax.Syntax(str(content),None,theme='monokai', line_numbers=True))
+  @property
+  def extension(self):
+    extension = os.path.splitext(self.path)[1]
+    if extension != '':
+      return extension
+    else:
+      return None
+  @property
+  def encoding(self):
     try:
-      filekind = filetype.guess(filename)
-      if filekind is None:
-        print('\033[92mFile-Type:text')
-        mode = 'r'
-        file_information(filename)
-        with console.Console().status("\033[96mLoading file …\033[0m"):
-          file_open(filename)
+      file = open(self.path,'rb')
+      return chardet.detect(file.read())['encoding']
+    except:
+      return None
+  @property
+  def size(self):
+    try:
+      return self._format_size(os.path.getsize(self.path))
+    except:
+      return None
+  def _format_size(self,size):
+    num = 0
+    while size > 1024:
+      size /= 1024
+      num += 1
+    unit = ['B','KIB','MIB','GIB','TIB','PIB']
+    return f"{size:.2f}".rstrip(".0").zfill(1)+unit[num]
+
+filetool = Filetool
+
+class Scanner:
+  def __init__(self,path,extension):
+    self.path = path
+    self.extension = extension
+    self.total_find = 0
+    self.total_file = 0
+  @property
+  def scan_extension(self):
+    with Console.status('\033[96mScanning files …\033[0m'):
+      self._scan_dir(self.path)
+    return f"\033[92m[Result]\033[0m\n\033[95mTotal files: {self.total_file}\nFiles with extension ({self.extension}): {self.total_find}"
+  def _scan_dir(self,path):
+    for item in os.listdir(path):
+      full_path = os.path.join(path, item)
+      if os.path.isdir(full_path):
+        if os.access(full_path, os.R_OK):
+          self._scan_dir(full_path)
       else:
-        file_type = filekind.extension
-        print('\033[92mFile-Type:%s' % file_type)
-        if file_type == 'png' or file_type == 'jpg':
-          mode = 'rb'
-          file_information(filename)
-          with console.Console().status("\033[96mLoading file …\033[0m"):
-            file_open(filename)
-        elif file_type == 'zip':
-          zip = zipfile.ZipFile(filename)
-          print(zip.filename)
-          for i in range(len(zip.namelist())):
-            print('\033[94m├ '+zip.namelist()[i])
-          unfile_answer = input('\033[94mDo you want to unzip to the current directory?(Y/n)')
-          while True:
-            if unfile_answer == 'Y' or unfile_answer == 'y':
-              zip.extractall()
-              Tip_pta('Extracted to the current directory')
-              break
-            elif unfile_answer == 'n':
-              break
-            else:
-              Error_ptb(unfile_answer)
-          else:
-            pass
-    except FileNotFoundError as e:
-      error_cross('FileNotFoundError','Command',str(e),'open '+filename)
-    except UnicodeDecodeError as e:
-      error_cross('UnicodeDecodeError','Command',str(e),'open '+filename)
-    except IsADirectoryError as e:
-      error_cross('IsADirectoryError','Command',str(e),'open '+filename)
-    except PermissionError as e:
-      error_cross('PermissionError','Command',str(e),'open '+filename)
-  else:
-    error_cross('FileNotFoundError','Command','Please enter a file name','open '+filename)
+        if os.path.isfile(full_path):
+          self.total_file+=1
+          extension = os.path.splitext(item)[1]
+          if extension == self.extension:
+            self.total_find+=1
+            size = filetool(full_path).size
+            print(f'\033[96m{full_path} ({size})\033[0m')
 
-def file_open(filename):
-  Console = console.Console()
-  file = open(filename,'rb')
-  code = file.read().decode('utf-8')
-  file.close()
-  extension = os.path.splitext(filename)[1]
-  if extension == '.py':
-    Console.print(syntax.Syntax(code,'python',theme="ansi_dark", line_numbers=True))
-  elif extension == '.html':
-    Console.print(syntax.Syntax(code,'html',theme="ansi_dark", line_numbers=True))
-  elif extension == '.c':
-    Console.print(syntax.Syntax(code,'c',theme="ansi_dark", line_numbers=True))
-  elif extension == '.cpp':
-    Console.print(syntax.Syntax(code,'cpp',theme="ansi_dark", line_numbers=True))
-  elif extension == '.java':
-    Console.print(syntax.Syntax(code,'java',theme="ansi_dark", line_numbers=True))
-  elif extension == '.sh':
-    Console.print(syntax.Syntax(code,'bash',theme="ansi_dark", line_numbers=True))
-  elif extension == '.js':
-    Console.print(syntax.Syntax(code,'javascript',theme="ansi_dark", line_numbers=True))
-  else:
-    Console.print(syntax.Syntax(code,'text',theme="ansi_dark", line_numbers=True))
-
-def del_file(filename):
-  os.system('rm -rf '+filename)
-  Tip_pta('Successfully deleted')
-
-def file_size(file):
-  tree_dir(file)
+scanner = Scanner

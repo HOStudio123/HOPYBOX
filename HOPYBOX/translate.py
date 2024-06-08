@@ -1,5 +1,16 @@
+from re import compile
 from requests import get
 from bs4 import BeautifulSoup
+
+def char(text):
+  pat_en = re.compile(r'^[a-zA-Z]+$')
+  pat_cn = re.compile(r'^[\u4e00-\u9fff]+$')
+  if bool(pat_en.match(text.split(' ')[0])):
+    return ['en','zh-CN']
+  elif bool(pat_cn.match(text.split(' ')[0])):
+    return ['zh-CN','en']
+  else:
+    return None
 
 class NullError(Exception):
     def __init__(self):
@@ -42,5 +53,18 @@ class Translate:
         return content[0].text
       else:
         raise NullError
+    def output(self,data):
+      i = 0
+      data_type = type(data).__name__
+      if data_type == 'dict':
+        for word,pos in data.items():
+          i+=1
+          print(f'\033[1;94m{i} \033[0m\033[95m{pos}{word}\033[0m')
+      elif data_type == 'list':
+        for trans in data:
+          i+=1
+          print(f'\033[1;94m{i} \033[0m\033[95m{trans}\033[0m')
+      else:
+        print(data)
         
 translate = Translate()

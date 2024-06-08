@@ -1,2 +1,4 @@
-class timetool:
+class Timetool:
   pass
+
+timetool = Timetool()

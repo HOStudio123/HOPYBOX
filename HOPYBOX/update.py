@@ -1,6 +1,5 @@
 from rich.console import Console
-from .basedtool import clear
-from .basedtool import terminal
+from os import system
 from requests import get
 from .prompt import tip_tick
 from .prompt import error_cross
@@ -14,6 +13,17 @@ def update_log_add(version,date,text):
   update_log_content[f'{version}'] = {'date':f'{date}','update':f'{text}'}
 
 update_log_add('0.0.1','May 2, 2022','* This is the first version of HOPYBOX posted on PyPI, but not the first version of HOPYBOX, The first version was born around Jan 28, 2022')
+update_log_add('0.0.5','May 2 2022','* Fixed some known issues')
+update_log_add('0.1.0','May 2 2022','* Fixed some known issues')
+update_log_add('0.1.5','May 2 2022','* Fixed some known issues')
+update_log_add('0.2.0','May 2 2022','* Fixed some known issues')
+update_log_add('0.2.1','May 2 2022','* Fixed some known issues')
+update_log_add('0.3.4','May 2 2022','* Fixed some known issues')
+update_log_add('0.3.5','May 2 2022','* Fixed some known issues')
+update_log_add('0.3.6','May 2 2022','* Fixed some known issues')
+update_log_add('0.3.8','May 2 2022','* Fixed some known issues')
+update_log_add('0.3.9','May 2 2022','* Fixed some known issues')
+update_log_add('0.4.0','May 2 2022','* Fixed some known issues')
 update_log_add('0.9.6','May 2, 2022','* Updated program error\n* Added function to open files\n* Fixed some known issues')
 update_log_add('1.2.0','May 8 2022','* Added calculator function\n* Fixed some known issues',)
 update_log_add('1.3.4','May 15 2022','* Fixed some known issues')
@@ -46,15 +56,22 @@ update_log_add('1.6.5','Dec 23, 2022','* Fixed some known issues')
 update_log_add('1.6.6','Feb 3, 2023','* Fixed some known issues')
 update_log_add('1.6.7','Feb 3, 2023','* Fixed some known issues')
 update_log_add('1.7.0','Oct 10 2023','* Removed some commands\n* Add some new commands\n* Code structure optimization\n* Import method update\n* Fixed some known issues')
-update_log_add('1.7.1','Jun 1 2024','* Removed some commands\n* Add some new commands\n* Code structure optimization\n* Import method update\n* Fixed some known issues')
-update_log_add('1.7.2','Jun 1 2024','* Removed some commands\n* Add some new commands\n* Code structure optimization\n* Import method update\n* Fixed some known issues')
+update_log_add('1.7.1','Jun 1 2024','* Removed some commands\n* Add some new commands\n* Code structure optimization\n* Fixed some known issues')
+update_log_add('1.7.2','Jun 5 2024','* Removed some commands\n* Add some new commands\n* Code structure optimization\n* Fixed some known issues')
+update_log_add('1.7.3','Jun 6 2024','* Removed some commands\n* Add some new commands\n* Add a new mode\n* Code structure optimization\n* Fixed some known issues')
+update_log_add('1.7.4','Jun 6 2024','* Removed some commands\n* Add some new commands\n* Add a new mode\n* Code structure optimization\n* Fixed some known issues')
 
 
 def update_log_get(version):
   try:
-    print(f'\033[96mHOPYBOX {version} Update Data\033[0m\033[92m ('+update_log_content[version]['date']+')\033[0m\n\033[95m'+update_log_content[version]['update'])
+    print(f"\033[96mHOPYBOX {version} Update Data\033[0m\033[92m ({update_log_content[version]['date']})\033[0m\n\033[95m{update_log_content[version]['update']}")
   except KeyError:
-   error_cross('NotFoundVersionError','Command','No update log found for this version',f'update {version}')
+   if version == 'all':
+     for version_num in update_log_content:
+       for date,content in update_log_content[version_num]:
+         print(f"\033[96mHOPYBOX {version_num} Update Data\033[0m\033[92m ({date})\033[0m\n\033[95m{content}")
+   else:
+     error_cross('NotFoundVersionError','Command','No update log found for this version',f'update {version}')
    
 def update_program():
   try:
@@ -66,7 +83,7 @@ def update_program():
       while True:
         result = ask_proceed('There is a latest stable version discovered from PyPI')
         if result == True:
-          terminal('python3 -m pip install -U HOPYBOX')
+          system('python3 -m pip install -U HOPYBOX')
           tip_tick('Please restart the program manually')
           exit()
         elif result == None:

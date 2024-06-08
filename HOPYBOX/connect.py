@@ -45,7 +45,7 @@ class Hoget:
         print(f'\033[32mEncoding\033[0m\033[95m\n{res.encoding}')
       print('\033[32mContent\033[0m')
       if res.encoding:
-        self.content_out(cache.decode(res.encoding))
+        self.content_output(cache.decode(res.encoding))
       else:
         print(cache)
     else:
@@ -57,8 +57,8 @@ class Hoget:
       return time.time() - self.start_time
   def content(self,url):
     return requests.get(url,headers=headers,stream=True,verify=False)
-  def content_out(self,content):
-    console.print(syntax.Syntax(content,'html',theme="ansi_dark",line_numbers=True))
+  def content_output(self,content):
+    console.print(syntax.Syntax(content,'html',theme='monokai',line_numbers=True))
     
 def browser(url):
   try:

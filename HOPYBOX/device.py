@@ -9,7 +9,6 @@ import psutil
 import datetime
 import requests
 import platform
-# from .headers import headers_water
 
 class Device:
   def name(self):
