@@ -11,11 +11,9 @@ def get_file_size(file):
   try:
     return os.path.getsize(file)
   except:
-    pass
+    return None
 
 def format_file_size(size):
-  if size is None:
-    return 'Failed'
   num = 0
   while size > 1024:
     size /= 1024

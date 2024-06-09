@@ -9,7 +9,7 @@ All Rights Reserved.
 
 from rich.console import Console
 with Console().status("\033[96mLoading resources …\033[0m"):
-  import os
+  import os,re
   # datetime
   from datetime import datetime
   # getpass
@@ -62,13 +62,13 @@ with Console().status("\033[96mLoading resources …\033[0m"):
   _version_type = 'default'
   _version_all = f'\033[95m* HOPYBOX Version {_version_code}\n* Python Version {python_version()}'
   # update time
-  _update_time = '10:10:50'
+  _update_time = '14:30:00'
   # command
   command_data_add()
   # store system
   _store = ''
   # start text
-  print(f"\033[96mWELCOME TO HOPYBOX\n\033[0m\033[92m[USER:{getuser().upper()}] [FPS:{device.Fps().fps()}] [RUN:{datetime.now().strftime('%H:%M:%S')}]\033[0m\nHOPYBOX {_version_code} ({_version_type}, {update_log_content[_version_code]['date']}, {_update_time})\n[Python {python_version()}] on {system()}\nType \"help\" , \"copyright\" , \"version\" ,\"feedback\" or \"license\" for more information")
+  print(f"\033[96mWELCOME TO HOPYBOX\n\033[0m\033[92m[USER:{getuser().upper()}] [RUN:{datetime.now().strftime('%H:%M:%S')}]\033[0m\nHOPYBOX {_version_code} ({_version_type}, {update_log_content[_version_code]['date']}, {_update_time})\n[Python {python_version()}] on {system()}\nType \"help\" , \"copyright\" , \"version\" ,\"feedback\" or \"license\" for more information")
   
 # switch mode
 def _switch(mode):
@@ -124,6 +124,16 @@ def terminal(command):
 def clear():
   print("\033c",end="")
   terminal('cls' if os.name == 'nt' else 'clear')
+
+def char(text):
+  pat_en = re.compile(r'^[a-zA-Z]+$')
+  pat_cn = re.compile(r'^[\u4e00-\u9fff]+$')
+  if bool(pat_en.match(text.split(' ')[0])):
+    return ['en','zh-CN']
+  elif bool(pat_cn.match(text.split(' ')[0])):
+    return ['zh-CN','en']
+  else:
+    return None
   
 # start
 def start():

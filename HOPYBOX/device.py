@@ -15,6 +15,8 @@ class Device:
     return platform.node()
   def type(self):
     return platform.machine()
+  def bit(self):
+    return platform.architecture()[0]
   class Web:
     class IP:
       def local(self):
@@ -26,6 +28,8 @@ class Device:
     def mac(self):
       mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
       return ":".join([mac[e:e+2] for e in range(0,11,2)])
+    def network(self):
+      return platform.node()
   class System:
     def name(self):
       return platform.system()
@@ -35,6 +39,8 @@ class Device:
       return locale.getlocale()[0]
     def encode(self):
       return locale.getlocale()[1]
+    def release(self):
+      return platform.release()
   class Processor:
     def type(self):
       return platform.processor()

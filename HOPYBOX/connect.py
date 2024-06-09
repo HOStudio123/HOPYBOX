@@ -62,7 +62,7 @@ class Hoget:
     
 def browser(url):
   try:
-    webbrowser.open(url) 
+    webbrowser.open_new(url) 
     tip_tick('The program has opened the URL in the browser')
   except Exception as e:
     error_cross('OpenBrowserError','Command',e,f'browget {url}')

@@ -59,7 +59,7 @@ update_log_add('1.7.0','Oct 10 2023','* Removed some commands\n* Add some new co
 update_log_add('1.7.1','Jun 1 2024','* Removed some commands\n* Add some new commands\n* Code structure optimization\n* Fixed some known issues')
 update_log_add('1.7.2','Jun 5 2024','* Removed some commands\n* Add some new commands\n* Code structure optimization\n* Fixed some known issues')
 update_log_add('1.7.3','Jun 6 2024','* Removed some commands\n* Add some new commands\n* Add a new mode\n* Code structure optimization\n* Fixed some known issues')
-update_log_add('1.7.4','Jun 6 2024','* Removed some commands\n* Add some new commands\n* Add a new mode\n* Code structure optimization\n* Fixed some known issues')
+update_log_add('1.7.4','Jun 9 2024','* Removed some commands\n* Add some new commands\n* Add a new mode\n* Code structure optimization\n* Fixed some known issues')
 
 
 def update_log_get(version):
