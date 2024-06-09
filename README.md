@@ -27,12 +27,12 @@ $ hopybox
 $ HOPYBOX
 ```
 ```python
->>>import hopybox
->>>hopybox.start()
+>>>from hopybox import __main__
+>>>__main__.start()
 ```
 ## Import method
 ```python
->>>import hopybox
+>>>from hopybox import *
 ```
 ## Usage
 See help built in the program
