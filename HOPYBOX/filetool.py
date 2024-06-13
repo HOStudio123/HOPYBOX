@@ -1,10 +1,8 @@
 import os
-import pwd
-import grp
+if os.name not in ['nt','java']:
+  import pwd
+  import grp
 import time
-import chardet
-import zipfile
-import tarfile
 from rich import console,syntax
 from .prompt import error_cross
 from .prompt import tip_tick
@@ -68,6 +66,17 @@ Console = console.Console()
 def f_time(timestamp):
   return time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(timestamp))
 
+def guess_encoding(path):
+  encodings = ['UTF-8','ASCII','ISO-8859-1','UTF-16','UTF-16LE','UTF-16BE','UTF-32','UTF-32LE','UTF-32BE','GBK','GB2312','Big5','EUC-JP', 'Shift-JIS', 'EUC-KR', 'ISO-2022-JP', 'ISO-8859-2', 'ISO-8859-3','ISO-8859-4','ISO-8859-5','ISO-8859-6','ISO-8859-7','ISO-8859-8','ISO-8859-9','ISO-8859-10','ISO-8859-13','ISO-8859-14','ISO-8859-15','ISO-8859-16','windows-1250','windows-1251','windows-1252', 'windows-1253','windows-1254','windows-1255','windows-1256','windows-1257','windows-1258','KOI8-R','KOI8-U','MacRoman','IBM855', 'IBM866', 'IBM852', 'IBM857','IBM855', 'IBM862','IBM864','IBM869','IBM1026','TIS-620', 'TSCII','VISCII','TCVN-5712','PTCP154']
+  for encoding in encodings:
+    try:
+      with open(path, 'r', encoding=encoding) as file:
+        file.read(1024)
+      return encoding
+    except Exception:
+      pass
+  return None
+
 class Filetool:
   def __init__(self,path):
     if os.path.isfile(r'%s' % path):
@@ -81,9 +90,10 @@ class Filetool:
     print(f'\033[92mName \033[0m\033[95m{self.name}\033[0m')
     print(f'\033[92mPath \033[0m\033[95m{self.abspath}\033[0m')
     print(f'\033[92mLanguage \033[0m\033[95m{self.lang}\033[0m')
+    print(f'\033[92mEncoding \033[0m\033[95m{self.encoding}\033[0m')
     print(f'\033[92mPermission \033[0m\033[95m{self.permission_string} ({self.permission_code})\033[0m')
-    print(f'\033[92mCreated time \033[0m\033[95m{self.b_time}\033[0m')
     print(f'\033[92mSize \033[0m\033[95m{self.size}\033[0m')
+    print(f'\033[92mAccess time \033[0m\033[95m{self.a_time}\033[0m')
     print(f'\033[92mModification time \033[0m\033[95m{self.m_time}\033[0m')
     print(f'\033[92mOwner \033[0m\033[95m{self.owner}\033[0m')
     print(f'\033[92mUser \033[0m\033[95m{self.user}\033[0m')
@@ -96,9 +106,9 @@ class Filetool:
     content = file.read()
     file.close()
     if self.extension in language_types:
-      Console.print(syntax.Syntax(content,language_types[self.extension],theme='monokai', line_numbers=True))
+      Console.print(syntax.Syntax(content,language_types[self.extension],theme='ansi_dark', line_numbers=True))
     else:
-      Console.print(syntax.Syntax(str(content),None,theme='monokai', line_numbers=True))
+      Console.print(syntax.Syntax(str(content),None,theme='ansi_dark',line_numbers=True))
   @property
   def name(self):
     return os.path.basename(self.path)
@@ -111,11 +121,7 @@ class Filetool:
       return None
   @property
   def encoding(self):
-    try:
-      file = open(self.path,'rb')
-      return chardet.detect(file.read())['encoding']
-    except:
-      return None
+    return guess_encoding(self.path)
   @property
   def size(self):
     try:
@@ -132,6 +138,9 @@ class Filetool:
   def m_time(self):
     return f_time(os.stat(self.path).st_mtime)
   @property
+  def a_time(self):
+    return f_time(os.stat(self.path).st_atime)
+  @property
   def permission_code(self):
     return oct(os.stat(self.path).st_mode)[-3:]
   @property
@@ -141,6 +150,8 @@ class Filetool:
   def user(self):
     return grp.getgrgid(os.stat(self.path).st_gid).gr_name
   def _format_size(self,size):
+    if size == None:
+      return None
     num = 0
     while size > 1024:
       size /= 1024
@@ -155,7 +166,6 @@ class Filetool:
     other_permissions = ''.join(['rwx'[i] if permissions >> (2 - i) & 0b001 else '---'[i] for i in range(3)])
     return owner_permissions + group_permissions + other_permissions
     
-
 filetool = Filetool
 
 class Scanner:

@@ -58,11 +58,11 @@ with Console().status("\033[96mLoading resources …\033[0m"):
   # windows
   _windows = 0
   # version
-  _version_code = '1.7.4'
+  _version_code = '1.7.5'
   _version_type = 'default'
   _version_all = f'\033[95m* HOPYBOX Version {_version_code}\n* Python Version {python_version()}'
   # update time
-  _update_time = '14:30:00'
+  _update_time = '18:06:00'
   # command
   command_data_add()
   # store system
@@ -82,7 +82,7 @@ def _switch(mode):
 # exception
 class NotFoundCommandError(Exception):
   def __init__(self):
-    super().__init__('This command was not found')
+    super().__init__('This command was not found in this mode')
 
 # command process
 def _process(command,blank=2):
@@ -93,7 +93,11 @@ def run(command):
   global _command
   _command = _process(command)[0]
   try:
-    if _command in command_data[_mode]:
+    if _command in command_data['Global']:
+      if len(_process(command)) != 1:
+        command_data['Global'][_command]['run'] = _process(command)[1]
+      exec(command_data['Global'][_command]['code'])  
+    elif _command in command_data[_mode]:
       if len(_process(command)) == 1:
         exec(command_data[_mode][_command]['code'])
       else:
@@ -107,6 +111,7 @@ def run(command):
           else:
             command_data[_mode][_command]['run'] = _process(command,blank=1)[1]
           exec(command_data[_mode][_command]['code'])
+      
     else:
       raise NotFoundCommandError
   except Exception as e:
@@ -114,7 +119,10 @@ def run(command):
     try:
       del command_data[_mode][_command]['run']
     except:
-      pass
+      try:
+        del command_data['Global'][_command]['run']
+      except:
+        pass
 
 # basedtools
 

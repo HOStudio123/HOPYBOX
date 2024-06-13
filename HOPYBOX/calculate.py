@@ -1,11 +1,13 @@
-import math
-import cmath
+from math import *
 
 class NumberError(Exception):
     def __init__(self):
         super().__init__('Wrong number type or combination')
 
 class Calculate:
+  class Expression:
+    def run(self,text):
+      return eval(text,{'__builtins__':None},{'sin':sin,'cos':cos,'tan':tan,'sqrt':sqrt,'log':log,'exp':exp,'cbrt':cbrt,'radians':radians,'degrees':degrees,'e':e,'pi':pi,'perm':perm,'abs':abs})
   class Triangle:
     def __init__(self,a,b,c):
       if a > 0 and b > 0 and c > 0 and a+b>c and a+c>b and b+c>a:

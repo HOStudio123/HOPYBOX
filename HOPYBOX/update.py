@@ -6,7 +6,7 @@ from .prompt import error_cross
 from .prompt import ask_proceed
 
 console = Console()
-update_version_number = 169
+update_version_number = 175
 update_log_content = {}
 
 def update_log_add(version,date,text):
@@ -60,17 +60,17 @@ update_log_add('1.7.1','Jun 1 2024','* Removed some commands\n* Add some new com
 update_log_add('1.7.2','Jun 5 2024','* Removed some commands\n* Add some new commands\n* Code structure optimization\n* Fixed some known issues')
 update_log_add('1.7.3','Jun 6 2024','* Removed some commands\n* Add some new commands\n* Add a new mode\n* Code structure optimization\n* Fixed some known issues')
 update_log_add('1.7.4','Jun 9 2024','* Removed some commands\n* Add some new commands\n* Add a new mode\n* Code structure optimization\n* Fixed some known issues')
+update_log_add('1.7.5','Jun 12 2024','*Add some new commands\n* Add a new mode\n* Code structure optimization\n* Fixed some known issues')
 
 
 def update_log_get(version):
   try:
-    print(f"\033[96mHOPYBOX {version} Update Data\033[0m\033[92m ({update_log_content[version]['date']})\033[0m\n\033[95m{update_log_content[version]['update']}")
-  except KeyError:
-   if version == 'all':
+    if version == 'all':
      for version_num in update_log_content:
-       for date,content in update_log_content[version_num]:
-         print(f"\033[96mHOPYBOX {version_num} Update Data\033[0m\033[92m ({date})\033[0m\n\033[95m{content}")
-   else:
+       print(f"\033[96mHOPYBOX {version_num} Update Data\033[0m\033[92m ({update_log_content[version_num]['date']})\033[0m\n\033[95m{update_log_content[version_num]['update']}")
+    else:
+      print(f"\033[96mHOPYBOX {version} Update Data\033[0m\033[92m ({update_log_content[version]['date']})\033[0m\n\033[95m{update_log_content[version]['update']}")
+  except KeyError:
      error_cross('NotFoundVersionError','Command','No update log found for this version',f'update {version}')
    
 def update_program():

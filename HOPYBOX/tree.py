@@ -7,13 +7,15 @@ console = Console()
 max_level = None
 no_recursion_calc = None
 
-def get_file_size(file):
+def g_size(file):
   try:
     return os.path.getsize(file)
   except:
     return None
 
-def format_file_size(size):
+def f_size(size):
+  if size == None:
+    return None
   num = 0
   while size > 1024:
     size /= 1024
@@ -39,24 +41,23 @@ def walk_dir(path,tree,level=0):
         parent = tree.add(f'[bright_magenta]{file}')
       size = walk_dir(file_path, parent, level + 1)
       if size and parent:
-        parent.label += f'[bright_yellow] ({format_file_size(size)})'
+        parent.label += f'[bright_yellow] ({f_size(size)})'
     else:
-      size = get_file_size(file_path)
+      size = g_size(file_path)
       if level < max_level:
         text_filename = Text(file,'bright_green')
         text_filename.highlight_regex(r'\.[^.]+$','bold blue')
-        text_filename.append(f' ({format_file_size(size)})','bright_cyan')
+        text_filename.append(f' ({f_size(size)})','bright_cyan')
         tree.add(text_filename)
     if size:
       total_size += size
   return total_size
 
 def tree(path,m_level=7):
-  with console.status('\033[96mLoading trees …\033[0m'):
-    global max_level, no_recursion_calc
-    max_level = m_level
-    no_recursion_calc = False
-    tree = Tree(f'[bright_magenta]{os.path.abspath(path)}')
-    size = walk_dir(path, tree)
-    tree.label += f' [bright_yellow]({format_file_size(size)})'
-    rich.print(tree)
+  global max_level, no_recursion_calc
+  max_level = m_level
+  no_recursion_calc = False
+  tree = Tree(f'[bright_magenta]{os.path.abspath(path)}')
+  size = walk_dir(path, tree)
+  tree.label += f' [bright_yellow]({f_size(size)})'
+  rich.print(tree)

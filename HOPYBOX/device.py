@@ -43,7 +43,7 @@ class Device:
       return platform.release()
   class Processor:
     def type(self):
-      return platform.processor()
+      return platform.processor() if platform.processor() else None
     def logic_count(self):
       return psutil.cpu_count()
     def core_count(self):
@@ -56,7 +56,7 @@ class Device:
     def free(self):
       return f'{float(psutil.virtual_memory().free)/1024**3:.2f}GB'
     def percent(self):
-      return f'{str(int(round(psutil.virtual_memory().percent)))}%'
+      return f'{round(psutil.virtual_memory().percent)}%'
   class Storage:
     def total(self,path):
       storage = psutil.disk_usage(path)

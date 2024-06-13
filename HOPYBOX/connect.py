@@ -58,7 +58,7 @@ class Hoget:
   def content(self,url):
     return requests.get(url,headers=headers,stream=True,verify=False)
   def content_output(self,content):
-    console.print(syntax.Syntax(content,'html',theme='monokai',line_numbers=True))
+    console.print(syntax.Syntax(content,'html',theme='ansi_dark',line_numbers=True))
     
 def browser(url):
   try:
