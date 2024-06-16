@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "HOPYBOX"
-version = "1.7.5"
+version = "1.7.6"
 authors = [{name = "HOStudio123(ChenJinlin)",email = "hostudio.hopybox@foxmail.com"}]
 license = {text = " GPL-3.0 license"}
 description = "This is an open source, practical command Python box."
@@ -23,11 +23,13 @@ classifiers = [
     "Programming Language :: Python :: 3.12"
 ]
 dependencies = [
-    "requests",
-    "yagmail",
-    "rich>=13.0.0",
     "bs4",
-    "psutil>=5.8.0"
+    "getch",
+    "pyotp>=2.9.0",
+    "requests",
+    "rich>=13.0.0",
+    "psutil>=5.8.0",
+    "prompt_toolkit>=3.0.0"
 ]    
 
 [project.urls]
