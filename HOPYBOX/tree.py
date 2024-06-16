@@ -21,7 +21,7 @@ def f_size(size):
     size /= 1024
     num += 1
   unit = ['B','KIB','MIB','GIB','TIB','PIB']
-  return f"{size:.2f}".rstrip(".0").zfill(1)+unit[num]
+  return f"{size:.2f} ".rstrip(".0").zfill(1)+unit[num]
 
 
 def walk_dir(path,tree,level=0):

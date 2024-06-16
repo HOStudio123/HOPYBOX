@@ -1,9 +1,15 @@
 import os
 import time
+import shutil
 import webbrowser
 import requests
 from rich import syntax
 from rich.console import Console
+from rich.progress import Progress
+from rich.progress import BarColumn
+from rich.progress import DownloadColumn
+from rich.progress import TransferSpeedColumn
+from rich.progress import TimeRemainingColumn
 from .headers import headers_water
 from .prompt import tip_tick
 from .prompt import error_cross
@@ -30,7 +36,7 @@ class Hoget:
       print(f"\033[32mUniform Resource Locator\033[0m\033[95m\n{res.url}\n\033[32mRequest Duration\033[0m\033[95m\n{self.total_time} s")
       with Console().status("\033[96mLoading information …"):
         cache = res.content
-        print(f"\033[32mWebsite Size\033[0m\033[95m\n{len(cache)} B")
+        print(f"\033[32mWebsite Size\033[0m\033[95m\n{self._format_size(len(cache))}")
         print('\033[32mHeaders\033[0m\033[95m')
         for name, value in res.headers.items():
           print('* %s:%s ' % (name, value))
@@ -59,6 +65,17 @@ class Hoget:
     return requests.get(url,headers=headers,stream=True,verify=False)
   def content_output(self,content):
     console.print(syntax.Syntax(content,'html',theme='ansi_dark',line_numbers=True))
+  def _format_size(self,size):
+    if size == None:
+      return None
+    num = 0
+    while size > 1024:
+      size /= 1024
+      num += 1
+    unit = ['B','KIB','MIB','GIB','TIB','PIB']
+    return f"{size:.2f} ".rstrip(".0").zfill(1)+unit[num]
+
+hoget = Hoget()
     
 def browser(url):
   try:
@@ -67,4 +84,18 @@ def browser(url):
   except Exception as e:
     error_cross('OpenBrowserError','Command',e,f'browget {url}')
 
-hoget = Hoget()
+def download(url):
+  save_path = os.path.join(os.getcwd(),os.path.basename(url))
+  with requests.get(url, stream=True) as r:
+      r.raise_for_status()
+      total_length = int(r.headers.get('content-length', 0))
+      with Progress(BarColumn(bar_width=None),'[progress.percentage]{task.percentage:>3.0f}%',DownloadColumn(),TransferSpeedColumn(),TimeRemainingColumn()) as progress:
+        print(f"\033[95mDownloading {os.path.basename(url)}")
+        download_task = progress.add_task(None,total=total_length)
+        with open(save_path,'wb') as f:
+          for chunk in r.iter_content(chunk_size=8192):
+            if chunk:
+              f.write(chunk)
+              progress.update(download_task,advance=len(chunk))
+  progress.remove_task(download_task)
+  tip_tick(f"The file was saved to {save_path}")

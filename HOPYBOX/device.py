@@ -5,6 +5,7 @@ import uuid
 import json
 import locale
 import socket
+import shutil
 import psutil
 import datetime
 import requests
@@ -17,6 +18,13 @@ class Device:
     return platform.machine()
   def bit(self):
     return platform.architecture()[0]
+  def info(self):
+    print(f"\033[95mOperating System\033[0m {platform.system()}")
+    print(f"\033[95mOS Release\033[0m {platform.release()}")
+    print(f"\033[95mOS Version\033[0m {platform.version()}")
+    print(f"\033[95mMachine Type\033[0m {platform.machine()}")
+    print(f"\033[95mProcessor\033[0m {Device().Processor().info()}")
+    print(f"\033[95mNode Name\033[0m {platform.node()}")
   class Web:
     class IP:
       def local(self):
@@ -42,33 +50,37 @@ class Device:
     def release(self):
       return platform.release()
   class Processor:
-    def type(self):
+    def info(self):
       return platform.processor() if platform.processor() else None
     def logic_count(self):
-      return psutil.cpu_count()
+      return psutil.cpu_count(logical=True)
     def core_count(self):
       return psutil.cpu_count(logical=False)
   class Memory:
     def total(self):
-      return f'{float(psutil.virtual_memory().total)/1024**3:.2f}GB'
+      memory = psutil.virtual_memory()
+      return f'{float(memory.total)/1024**3:.2f}GB'
     def used(self):
-      return f'{float(psutil.virtual_memory().used)/1024**3:.2f}GB'
+      memory = psutil.virtual_memory()
+      return f'{float(memory.used)/1024**3:.2f}GB'
     def free(self):
-      return f'{float(psutil.virtual_memory().free)/1024**3:.2f}GB'
+      memory = psutil.virtual_memory()
+      return f'{float(memory.free)/1024**3:.2f}GB'
     def percent(self):
-      return f'{round(psutil.virtual_memory().percent)}%'
+      memory = psutil.virtual_memory()
+      return f'{round(memory.percent)}%'
   class Storage:
     def total(self,path):
-      storage = psutil.disk_usage(path)
+      storage = shutil.disk_usage(path)
       return f'{storage.total/(1024**3):.2f}GB'
     def used(self,path):
-      storage = psutil.disk_usage(path)
+      storage = shutil.disk_usage(path)
       return f'{storage.used/(1024**3):.2f}GB'
     def free(self,path):
-      storage = psutil.disk_usage(path)
+      storage = shutil.disk_usage(path)
       return f'{storage.free/(1024**3):.2f}GB'
     def percent(self,path):
-      storage = psutil.disk_usage(path)
+      storage = shutil.disk_usage(path)
       return f'{storage.percent}%'
   class Fps():
     def fps(self):

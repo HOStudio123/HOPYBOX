@@ -7,7 +7,7 @@ def _command_add(mode,name,code,operate,details):
     command_data[mode] = {name:{'code':code,'help':{'operate':operate,'details':details}}}
 
 def command_data_add():
-  _command_add('Global','help',"if 'run' in command_data['Global']['help']:\n  print(command_help(_mode,command_data['Global']['help']['run']))\nelse:\n  command_help(None,None)",'help {command}','Type help {command} for help about command')
+  _command_add('Global','help',"if 'run' in command_data['Global']['help']:\n  print(command_help(_mode,command_data['Global']['help']['run']))\nelse:\n  command_help(None,None)",'help {command}','Type "help {command}" for help about this command or "help" for help about all commands')
   _command_add('Global','exit','exit()','exit','Exit the program')
   _command_add('Global','clear','clear()','clear','Clear console')
   _command_add('Global','switch',"_switch(command_data['Global']['switch']['run'])",'switch {mode}','To switch running mode, type \"mode\" or \"help\" for more information')
@@ -22,16 +22,19 @@ def command_data_add():
   _command_add('Program','update','update_program()','update','To update the version')
   _command_add('Program','license',"print(license())",'license','To view the license')
   _command_add('Program','feedback',"print('\033[96mIf you have any questions or suggestions, please contact the developer as\033[0m\033[4;95m hostudio.hopybox@foxmail.com')",'feedback','To get the way of feedback')
-  _command_add('Program','email',"email(command_data['Program']['email']['run'])",'email {mail}','Send emails to people')
-  _command_add('Program','mode',"[print(f'\033[95m* {i}, there are {len(command_data[i])} command') for i in _mode_type]",'mode','Viewing the infomation of mode')
-  _command_add('Program','translate',{'-y':"translate.YouDao().output(translate.YouDao().trans(command_data['Program']['translate']['run'],char(command_data['Program']['translate']['run'])[1]))",'-g':"print(translate.Google().trans(command_data['Program']['translate']['run'],char(command_data['Program']['translate']['run'])[1]))"},['translate -y {text}','translate -g {text}'],['To translate the word into Chinese/English by YouDao','To translate the word into Chinese/English by Google'])
+  _command_add('Program','email',"email()",'email','Send emails to people')
+  _command_add('Program','totp',{'-s':"totp.set()",'-v':"totp.display()",'-d':"totp.delete()"},['totp -s','totp -v','totp -d'],'A simple 2FA system')
+  _command_add('Program','translate',{'-y':"translate.YouDao().output(translate.YouDao().trans(command_data['Program']['translate']['run'],langdet(command_data['Program']['translate']['run'])[1]))",'-g':"print(translate.Google().trans(command_data['Program']['translate']['run'],langdet(command_data['Program']['translate']['run'])[1]))"},['translate -y {text}','translate -g {text}'],['To translate the word into Chinese/English by YouDao','To translate the word into Chinese/English by Google'])
+  _command_add('Program','download',"download(command_data['Program']['download']['run'])",'download','To get the way of feedback')
+  _command_add('Program','hopybox',"print(hopybox_artword)",'hopybox','To get the wordart of hopybox')
   # Device _command_add('Device','','','','')
   _command_add('Device','name','print(device.name())','name','To get the device name')
   _command_add('Device','type','print(device.type())','type','To get the device type')
   _command_add('Device','bit','print(device.bit())','bit','To get the device bit')
+  _command_add('Device','info','device.info()','info','To get the device info')
   _command_add('Device','ip',{'-l':'print(device.Web().IP().local())','-p':'print(device.Web().IP().public())'},['ip -l','ip -p'],['To get the local ip address','To get the public ip address'])
   _command_add('Device','system',{'-n':'print(device.System().name())','-v':'print(device.System().version())','-l':'print(device.System().language())','-e':'print(device.System().encode())','-r':'print(device.System().release())'},['system -n','system -v','system -l','system -e','system -r'],['To get the system name','To get the system version','To get the system language','To get the system encode','To get the system release'])
-  _command_add('Device','processor',{'-t':'print(device.Processor().type())','-l':'print(device.Processor().logic_count())','-c':'print(device.Processor().core_count())'},['processor -t','processor -l','processor -c'],['To get the processor type','To get the cpu logic count','To get the cpu core count'])
+  _command_add('Device','processor',{'-i':'print(device.Processor().info())','-l':'print(device.Processor().logic_count())','-c':'print(device.Processor().core_count())'},['processor -i','processor -l','processor -c'],['To get the processor info','To get the cpu logic count','To get the cpu core count'])
   _command_add('Device','mac','print(device.Web().mac())','mac','To get the device mac')
   _command_add('Device','fps','print(device.Fps().fps())','fps','To get the device fps')
   _command_add('Device','network','print(device.Web().name())','network','To get the name of device network')
@@ -57,9 +60,15 @@ def command_data_add():
 
 def command_help(mode,command):
   record = ''
+  if command in command_data['Global']:
+    mode = 'Global'
   if command == None and mode == None:
     for m in command_data:
-      print(f'\033[92m[{m}]\033[0m')
+      print(f'\033[92m[{m}]\033[0m',end=' ')
+      if m != 'Global':
+        print(f'\033[95m(Type "switch {m}" to enter the mode)\033[0m')
+      else:
+        print()
       for c in command_data[m]:
         if type(command_data[m][c]['help']['operate'])!=str:
           for i in range(len(command_data[m][c]['help']['operate'])):

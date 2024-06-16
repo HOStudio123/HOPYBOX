@@ -6,7 +6,7 @@ from .prompt import error_cross
 from .prompt import ask_proceed
 
 console = Console()
-update_version_number = 175
+update_version_number = 176
 update_log_content = {}
 
 def update_log_add(version,date,text):
@@ -61,6 +61,7 @@ update_log_add('1.7.2','Jun 5 2024','* Removed some commands\n* Add some new com
 update_log_add('1.7.3','Jun 6 2024','* Removed some commands\n* Add some new commands\n* Add a new mode\n* Code structure optimization\n* Fixed some known issues')
 update_log_add('1.7.4','Jun 9 2024','* Removed some commands\n* Add some new commands\n* Add a new mode\n* Code structure optimization\n* Fixed some known issues')
 update_log_add('1.7.5','Jun 12 2024','*Add some new commands\n* Add a new mode\n* Code structure optimization\n* Fixed some known issues')
+update_log_add('1.7.6','Jun 12 2024','*Add some new commands\n* Code structure optimization\n* Fixed some known issues')
 
 
 def update_log_get(version):
@@ -91,4 +92,4 @@ def update_program():
         else:
           break
   except Exception:
-    error_cross('CheckError','Command','Failed to get update','check version')
+    error_cross('CheckError','Program','Failed to get update','check version')

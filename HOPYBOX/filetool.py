@@ -145,10 +145,14 @@ class Filetool:
     return oct(os.stat(self.path).st_mode)[-3:]
   @property
   def owner(self):
-    return pwd.getpwuid(os.stat(self.path).st_uid).pw_name
+    if os.name not in ['nt','java']:
+      return pwd.getpwuid(os.stat(self.path).st_uid).pw_name
+    return None
   @property
   def user(self):
-    return grp.getgrgid(os.stat(self.path).st_gid).gr_name
+    if os.name not in ['nt','java']:
+      return grp.getgrgid(os.stat(self.path).st_gid).gr_name
+    return None
   def _format_size(self,size):
     if size == None:
       return None
@@ -156,8 +160,8 @@ class Filetool:
     while size > 1024:
       size /= 1024
       num += 1
-    unit = ['B','KIB','MIB','GIB','TIB','PIB']
-    return f"{size:.2f}".rstrip(".0").zfill(1)+unit[num]
+    unit = ['B','KB','MB','GB','TB','PB']
+    return f"{size:.2f} ".rstrip(".0").zfill(1)+unit[num]
   @property
   def permission_string(self):
     permissions = os.stat(self.path).st_mode
