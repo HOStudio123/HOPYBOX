@@ -7,13 +7,19 @@ All Rights Reserved.
 
 # -*- coding:utf-8 -*-
 
+import os,re
+
+# color
+if os.name == 'nt':
+  os.system('')
+
 from rich.console import Console
 with Console().status("\033[96mLoading resources …\033[0m"):
-  import os,re
   # prompt_toolkit
   from prompt_toolkit import PromptSession
   from prompt_toolkit.styles import Style
-  from prompt_toolkit.completion import WordCompleter
+  from prompt_toolkit.completion import NestedCompleter
+  from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
   # datetime
   from datetime import datetime
   # getpass
@@ -66,11 +72,11 @@ with Console().status("\033[96mLoading resources …\033[0m"):
   # windows
   _windows = 0
   # version
-  _version_code = '1.7.6'
+  _version_code = '1.8.3'
   _version_type = 'default'
   _version_all = f'\033[95m* HOPYBOX Version {_version_code}\n* Python Version {python_version()}'
   # update time
-  _update_time = '14:34:00'
+  _update_time = '13:07:00'
   # command
   command_data_add()
   # store system
@@ -85,8 +91,18 @@ with Console().status("\033[96mLoading resources …\033[0m"):
 |_| |_||_____||_|       |_|   |____/|_____|/_/  \_\                    
  
   '''
-  # start text
-  print(f"\033[96mWELCOME TO HOPYBOX\n\033[0m\033[92m[USER:{getuser().upper()}] [RUN:{datetime.now().strftime('%H:%M:%S')}]\033[0m\nHOPYBOX {_version_code} ({_version_type}, {update_log_content[_version_code]['date']}, {_update_time})\n[Python {python_version()}] on {system()}\nType \"help\" , \"copyright\" , \"version\" ,\"feedback\" or \"license\" for more information")
+  # hopybox update log
+  update_log_dict = dict()
+  update_log_dict['all'] = None
+  for i in update_log_content:
+    update_log_dict[i] = None
+
+# command prompt list
+def help_list_update():
+  global command_prompt_list
+  command_prompt_list = set()
+  [command_prompt_list.add(j) for j in command_data['Global']]
+  [command_prompt_list.add(j) for j in command_data[_mode]]
   
 def terminal(command):
   os.system(command)
@@ -97,12 +113,10 @@ def clear():
   
 # switch mode
 def _switch(mode):
-  global _mode, _command_list
+  global _mode, completer
   if mode.title() in _mode_type:
     _mode = mode.title()
-    _command_list.clear()
-    [_command_list.append(i) for i in command_data[_mode]]
-    [_command_list.append(j) for j in command_data['Global']]
+    completer = NestedCompleter.from_nested_dict(_format_command())
     tip_tick('Program mode switched successfully')
   else:
     error_cross('SwitchError',_mode,'The mode was not found',_store.split(' ',1)[1])
@@ -111,74 +125,110 @@ def _switch(mode):
 class NotFoundCommandError(Exception):
   def __init__(self):
     super().__init__('This command was not found in this mode')
-
-def _history_add():
-  global _store
-  if _store not in _history:
-    if _history:
-      del _history[-1]
-    _history.append(_store)
-
+    
 # command process
-def _process(command,blank=2):
- return command.split(' ',blank)
- 
+def _process(command):
+  split_list = command.split()
+  if len(split_list) <= 2:
+    return command.split()
+  command = split_list[0]
+  parameter = split_list[1]
+  if parameter[0] == '-':
+    content = split_list[2:]
+    return [command,parameter,content]
+  content = split_list[1:]
+  return [command,content]
+
 # interpreter
+def analysis(mode,command):
+  global _command
+  if len(_process(command)) == 1:
+    exec(command_data[mode][_command]['code'])
+  else:
+    if _process(command)[1][0] == '-':
+      if len(_process(command)) == 3:
+        command_data[mode][_command]['run'] = _process(command)[2]
+      exec(command_data[mode][_command]['code'][_process(command)[1]])
+    else:
+      command_data[mode][_command]['run'] = _process(command)[1]
+      exec(command_data[mode][_command]['code'])
+  
 def run(command):
   global _command
-  _command = _process(command)[0]
+  _command = _process(command)[0] if command else ''
   try:
     if _command in command_data['Global']:
-      if len(_process(command)) != 1:
-        command_data['Global'][_command]['run'] = _process(command)[1]
-      exec(command_data['Global'][_command]['code'])  
-      _history_add()
-    elif _command in command_data[_mode]:
-      if len(_process(command)) == 1:
-        exec(command_data[_mode][_command]['code'])
-        _history_add()
-      else:
-        if _process(command)[1][0] == '-':
-          if len(_process(command)) == 3:
-            command_data[_mode][_command]['run'] = _process(command)[2]
-          exec(command_data[_mode][_command]['code'][_process(command)[1]])
-          _history_add()
-        else:
-          if len(_process(command)) < 3:
-            command_data[_mode][_command]['run'] = _process(command)[1]
-          else:
-            command_data[_mode][_command]['run'] = _process(command,blank=1)[1]
-          exec(command_data[_mode][_command]['code'])
-          _history_add()
-    else:
-      raise NotFoundCommandError
-  except Exception as e:
-    error_cross(e.__class__.__name__,_mode,e,_store)
-    try:
-      del command_data[_mode][_command]['run']
-    except:
+      analysis('Global',command)
       try:
         del command_data['Global'][_command]['run']
       except:
         pass
-  
+    elif _command in command_data[_mode]:
+      analysis(_mode,command)
+      try:
+        del command_data[_mode][_command]['run']
+      except:
+        pass
+    else:
+      raise NotFoundCommandError
+  except Exception as e:
+    error_cross(e.__class__.__name__,_mode,e,_store)
+
+# command formatting
+def _format_command():
+  global _mode, command_prompt_list
+  command_dict = dict()
+  for i in command_data[_mode]:
+    if type(command_data[_mode][i]['code']) == str:
+      command_dict[i] = update_log_dict if i == 'uplog' else None
+    else:
+      par_set = set()
+      [par_set.add(j) for j in command_data[_mode][i]['code']]
+      command_dict[i] = par_set
+      del par_set
+  for i in command_data['Global']:
+    if type(command_data['Global'][i]['code']) == str:
+      if i == 'switch':
+        command_dict[i] = {'Program','Device','File','Calculate'}
+      elif i == 'help':
+        help_list_update()
+        command_dict[i] = command_prompt_list
+      else:
+        command_dict[i] = None
+      
+    else:
+      par_set = set()
+      [par_set.add(j) for j in command_data['Global'][i]['code']]
+      command_dict[i] = par_set
+  return command_dict
+
 # start
 def start():
-  global _command, _store, _windows, _history, _command_list
-  _history = list()
+  global _command, _store, _windows, completer
+  mouse_support = False
+  times = 0
+  # start text
+  print(f"\033[96mWELCOME TO HOPYBOX\n\033[0m\033[92m[USER:{getuser().upper()}] [RUN:{datetime.now().strftime('%H:%M:%S')}]\033[0m\nHOPYBOX {_version_code} ({_version_type}, {update_log_content[_version_code]['date']}, {_update_time})\n[Python {python_version()}] on {system()}\nType \"help\" , \"copyright\" , \"version\" ,\"feedback\" or \"license\" for more information")
   style = Style.from_dict({'prompt':'yellow'})
-  _command_list=list()
-  [_command_list.append(i) for i in command_data[_mode]]
-  [_command_list.append(j) for j in command_data['Global']]
-  completer = WordCompleter(_command_list)
+  completer = NestedCompleter.from_nested_dict(_format_command())
   session = PromptSession(style=style)
   while True:
     _windows+=1
     try:
-      _command = session.prompt(f'[{_windows}]HOPYBOX/{_mode}:',completer=completer,style=style)
+      _command = session.prompt(f'[{_windows}]HOPYBOX/{_mode}:',completer=completer,style=style,mouse_support=mouse_support,auto_suggest=AutoSuggestFromHistory())
     except EOFError:
       exit()
     except KeyboardInterrupt:
+      times+=1
+      if times%2!=0:
+        mouse_support = True
+        tip_tick('Successfully turned on mouse mode')
+      else:
+        mouse_support = False
+        tip_tick('Successfully turned off mouse mode')
       continue
     _store = _command
     run(_command)
+    
+if __name__ == '__main__':
+  start()

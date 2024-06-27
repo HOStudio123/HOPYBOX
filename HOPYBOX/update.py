@@ -6,7 +6,7 @@ from .prompt import error_cross
 from .prompt import ask_proceed
 
 console = Console()
-update_version_number = 176
+update_version_number = 183
 update_log_content = {}
 
 def update_log_add(version,date,text):
@@ -55,14 +55,14 @@ update_log_add('1.6.4','Jul 9, 2022','* Fixed some known issues')
 update_log_add('1.6.5','Dec 23, 2022','* Fixed some known issues')
 update_log_add('1.6.6','Feb 3, 2023','* Fixed some known issues')
 update_log_add('1.6.7','Feb 3, 2023','* Fixed some known issues')
-update_log_add('1.7.0','Oct 10 2023','* Removed some commands\n* Add some new commands\n* Code structure optimization\n* Import method update\n* Fixed some known issues')
 update_log_add('1.7.1','Jun 1 2024','* Removed some commands\n* Add some new commands\n* Code structure optimization\n* Fixed some known issues')
 update_log_add('1.7.2','Jun 5 2024','* Removed some commands\n* Add some new commands\n* Code structure optimization\n* Fixed some known issues')
 update_log_add('1.7.3','Jun 6 2024','* Removed some commands\n* Add some new commands\n* Add a new mode\n* Code structure optimization\n* Fixed some known issues')
 update_log_add('1.7.4','Jun 9 2024','* Removed some commands\n* Add some new commands\n* Add a new mode\n* Code structure optimization\n* Fixed some known issues')
 update_log_add('1.7.5','Jun 12 2024','*Add some new commands\n* Add a new mode\n* Code structure optimization\n* Fixed some known issues')
-update_log_add('1.7.6','Jun 12 2024','*Add some new commands\n* Code structure optimization\n* Fixed some known issues')
-
+update_log_add('1.7.7','Jun 16 2024','* Fixed some known issues')
+update_log_add('1.8.2','Jun 22 2024','* Fixed some known issues\n* Add some new commands')
+update_log_add('1.8.3','Jun 22 2024','* Supports color text on Windows')
 
 def update_log_get(version):
   try:

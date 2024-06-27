@@ -5,7 +5,6 @@ import uuid
 import json
 import locale
 import socket
-import shutil
 import psutil
 import datetime
 import requests
@@ -25,6 +24,10 @@ class Device:
     print(f"\033[95mMachine Type\033[0m {platform.machine()}")
     print(f"\033[95mProcessor\033[0m {Device().Processor().info()}")
     print(f"\033[95mNode Name\033[0m {platform.node()}")
+    print(f"\033[95mLanguage\033[0m {locale.getlocale()[0]}")
+    print(f"\033[95mEncode\033[0m {locale.getlocale()[1]}")
+    print(f"\033[95mLocate IP\033[0m {Device().Web().IP().local()}")
+    print(f"\033[95mPublic IP\033[0m {Device().Web().IP().public()}")
   class Web:
     class IP:
       def local(self):
@@ -66,21 +69,27 @@ class Device:
     def free(self):
       memory = psutil.virtual_memory()
       return f'{float(memory.free)/1024**3:.2f}GB'
+    def available(self):
+      memory = psutil.virtual_memory()
+      return f'{float(memory.available)/1024**3:.2f}GB'
     def percent(self):
       memory = psutil.virtual_memory()
       return f'{round(memory.percent)}%'
   class Storage:
     def total(self,path):
-      storage = shutil.disk_usage(path)
+      storage = psutil.disk_usage(path)
       return f'{storage.total/(1024**3):.2f}GB'
     def used(self,path):
-      storage = shutil.disk_usage(path)
+      storage = psutil.disk_usage(path)
       return f'{storage.used/(1024**3):.2f}GB'
     def free(self,path):
-      storage = shutil.disk_usage(path)
+      storage = psutil.disk_usage(path)
       return f'{storage.free/(1024**3):.2f}GB'
+    def available(self,path):
+      storage = psutil.disk_usage(path)
+      return f'{storage.available/(1024**3):.2f}GB'
     def percent(self,path):
-      storage = shutil.disk_usage(path)
+      storage = psutil.disk_usage(path)
       return f'{storage.percent}%'
   class Fps():
     def fps(self):

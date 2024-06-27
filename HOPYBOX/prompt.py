@@ -1,5 +1,6 @@
 import sys
-import getch
+from prompt_toolkit import prompt
+from prompt_toolkit.styles import Style
 
 def ask_proceed(question): # question
   answer = input(f'\033[92m➤ \033[0m\033[96m  {question} , Do you want to proceed ? (Y/n) \033[0m')
@@ -17,21 +18,6 @@ def error_cross(error,mode,text,value): # cross
 def tip_tick(text): # tick
   print(f'\033[92m✓ \033[0m\033[96m {text}\033[0m')
 
-def getpass(prompt): # password
-  print(prompt,end='',flush=True)
-  password = ''
-  while True:
-    char = getch.getch()
-    if char == '\n':
-      break
-    elif char == '\b' or char == '\x7f':
-      if len(password) > 0:
-        password = password[:-1]
-        sys.stdout.write('\b \b')
-        sys.stdout.flush()
-    else:
-      password+=char
-      sys.stdout.write('*')
-      sys.stdout.flush()
-  print()
-  return password
+def getpass(text,color): # password
+  style = Style.from_dict({'prompt':color})
+  return prompt(text,is_password=True,style=style)

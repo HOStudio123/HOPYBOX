@@ -1,3 +1,5 @@
+import math
+import sympy
 from math import *
 
 class NumberError(Exception):
@@ -5,6 +7,12 @@ class NumberError(Exception):
         super().__init__('Wrong number type or combination')
 
 class Calculate:
+  class Function:
+    def __init__(self,function):
+      self.x = sympy.symbols('x')
+      self.function = function
+    def derivative(self,num):
+      return sympy.diff(sympy.sympify(self.function),self.x,int(num))
   class Expression:
     def run(self,text):
       return eval(text,{'__builtins__':None},{'sin':sin,'cos':cos,'tan':tan,'sqrt':sqrt,'log':log,'exp':exp,'cbrt':cbrt,'radians':radians,'degrees':degrees,'e':e,'pi':pi,'perm':perm,'abs':abs})

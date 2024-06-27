@@ -1,3 +1,4 @@
+import os
 import pyotp
 import random
 from base64 import b64encode, b64decode
@@ -28,15 +29,17 @@ def decrypt(password,encrypted_text):
   return plaintext.decode()
 
 class Totp:
+  def __init__(self):
+    self.set_path = os.path.join(os.path.expanduser('~'),'hopybox/.totp')
   def set(self):
     name = input('\033[95mServes Name\n\033[0m')
-    password = f"{random.randint(1,999999):06d}"
-    secret = encipher(password,getpass('\033[92mTOTP Secret Key\n\033[0m'))
-    with open('.totp_password.hpb','a+') as f:
-      print(f'{name} {password} {secret}',file=f)
+    ran_password = f"{random.randint(1,999999):06d}"
+    secret = encipher(ran_password,getpass('TOTP Secret Key\n','green'))
+    with open(self.set_path,'a+') as f:
+      print(f'{name} {ran_password} {secret}',file=f)
     tip_tick("Succeeded in setting")
   def display(self):
-    with open('.totp_password.hpb','r') as f:
+    with open(self.set_path,'r') as f:
       for line in f.readlines():
         otp = self.switch(decrypt(line.split(' ')[1],line.split(' ')[2]))
         print(f"\033[92m[{line.split(' ')[0]}]\033[0m\033[97m {otp}")
@@ -44,7 +47,7 @@ class Totp:
     return pyotp.TOTP(secret).now()
   def delete(self):
     i = 0
-    with open('.totp_password.hpb','r') as f:
+    with open(self.set_path,'r') as f:
       lines = f.readlines()
       for line in lines:
         i+=1
@@ -56,7 +59,7 @@ class Totp:
           result = ask_proceed("Do you really want to permanently delete this 2FA service ?")
           if result == True:
             del lines[line-1]
-            with open('.totp_password.hpb','w') as f:
+            with open(self.set_path,'w') as f:
               f.writelines(lines)
             tip_tick('Successfully deleted')
             break

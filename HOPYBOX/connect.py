@@ -1,6 +1,5 @@
 import os
 import time
-import shutil
 import webbrowser
 import requests
 from rich import syntax

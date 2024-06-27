@@ -1,10 +1,10 @@
 import os
 import smtplib
-from getpass import getpass
 from email import encoders
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
+from .prompt import getpass
 from .prompt import tip_tick
 from .prompt import error_cross
 
@@ -28,7 +28,7 @@ def email_send_pro_system(user,password,host,to,subject,body,attachments):
 def email():
   user = input('\033[94mYour Email Address\n\033[0m')
   to = input('\033[94mReceive Email Address\n\033[0m')
-  password = getpass('\033[95mEmail Authorization Code\n\033[0m(Hidden)')
+  password = getpass('Email Authorization Code\n','magenta')
   host = input('\033[92mEmailbox Server Address\n\033[0m')
   subject = input('\033[92mEmail Title\n\033[0m')
   body = input('\033[92mEmail Text Contents\n\033[0m')

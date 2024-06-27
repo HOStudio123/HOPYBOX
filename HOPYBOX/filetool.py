@@ -4,6 +4,7 @@ if os.name not in ['nt','java']:
   import grp
 import time
 from rich import console,syntax
+from prompt_toolkit import prompt
 from .prompt import error_cross
 from .prompt import tip_tick
 from .tree import tree
@@ -108,7 +109,7 @@ class Filetool:
     if self.extension in language_types:
       Console.print(syntax.Syntax(content,language_types[self.extension],theme='ansi_dark', line_numbers=True))
     else:
-      Console.print(syntax.Syntax(str(content),None,theme='ansi_dark',line_numbers=True))
+      print(content)
   @property
   def name(self):
     return os.path.basename(self.path)
@@ -197,5 +198,9 @@ class Scanner:
             self.total_find+=1
             size = filetool(full_path).size
             print(f'\033[96m{full_path} ({size})\033[0m')
+            
+class Editingtool:
+  def __init__(self):
+    prompt('', multiline=True)
 
 scanner = Scanner
