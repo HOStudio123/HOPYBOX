@@ -1,6 +1,5 @@
 import os
 import pyotp
-import random
 from base64 import b64encode, b64decode
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
@@ -30,19 +29,26 @@ def decrypt(password,encrypted_text):
 
 class Totp:
   def __init__(self):
+    if not os.path.isdir(os.path.join(os.path.expanduser('~'),'hopybox')):
+      os.mkdir(os.path.join(os.path.expanduser('~'),'hopybox'))
     self.set_path = os.path.join(os.path.expanduser('~'),'hopybox/.totp')
   def set(self):
-    name = input('\033[95mServes Name\n\033[0m')
-    ran_password = f"{random.randint(1,999999):06d}"
-    secret = encipher(ran_password,getpass('TOTP Secret Key\n','green'))
+    servers = input('\033[95mServes Name\n\033[0m').replace(' ','')
+    account = input('\033[95mAccount name\n\033[0m').replace(' ','')
+    secret = encipher(servers+account,getpass('TOTP Secret Key\n','green'))
     with open(self.set_path,'a+') as f:
-      print(f'{name} {ran_password} {secret}',file=f)
+      print(f"{servers} {account} {secret}",file=f)
     tip_tick("Succeeded in setting")
   def display(self):
-    with open(self.set_path,'r') as f:
-      for line in f.readlines():
-        otp = self.switch(decrypt(line.split(' ')[1],line.split(' ')[2]))
-        print(f"\033[92m[{line.split(' ')[0]}]\033[0m\033[97m {otp}")
+    with open(self.set_path, 'r') as f: 
+      line = f.readline()
+      while line: 
+        try:
+          otp = self.switch(decrypt(line.split()[0]+line.split()[1],line.split()[2]))
+        except:
+          otp = '\033[0m\033[91m✗ Worng Formatting'
+        print(f"\033[92m[{line.split()[0]}]\033[0m\033[94m ({line.split()[1]})\033[0m\033[97m {otp}")
+        line = f.readline()
   def switch(self,secret):
     return pyotp.TOTP(secret).now()
   def delete(self):
@@ -51,7 +57,7 @@ class Totp:
       lines = f.readlines()
       for line in lines:
         i+=1
-        print(f"\033[92m[{i}]\033[0m\033[97m {line.split(' ')[0]}")
+        print(f"\033[92m[{i}]\033[0m\033[97m {line.split(' ')[0]} ({line.split(' ')[1]})")
     if lines:
       line = int(input("\033[0m\033[95mWhich 2FA service do you want to delete ? \033[0m"))
       if 0 < line <= len(lines):
