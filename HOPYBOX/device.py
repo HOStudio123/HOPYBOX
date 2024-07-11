@@ -1,3 +1,12 @@
+'''
+Copyright (c) 2022-2024 HOStudio123(ChenJinlin).
+All Rights Reserved.
+'''
+
+#!/usr/bin/env python3
+
+# -*- coding:utf-8 -*-
+
 import os
 import sys
 import time
@@ -23,6 +32,7 @@ class Device:
     print(f"\033[95mOS Version\033[0m {platform.version()}")
     print(f"\033[95mMachine Type\033[0m {platform.machine()}")
     print(f"\033[95mProcessor\033[0m {Device().Processor().info()}")
+    print(f"\033[95mCPU Count\033[0m {os.cpu_count()}")
     print(f"\033[95mNode Name\033[0m {platform.node()}")
     print(f"\033[95mLanguage\033[0m {locale.getlocale()[0]}")
     print(f"\033[95mEncode\033[0m {locale.getlocale()[1]}")
@@ -56,9 +66,7 @@ class Device:
     def info(self):
       return platform.processor() if platform.processor() else None
     def logic_count(self):
-      return psutil.cpu_count(logical=True)
-    def core_count(self):
-      return psutil.cpu_count(logical=False)
+      return os.cpu_count()
   class Memory:
     def total(self):
       memory = psutil.virtual_memory()

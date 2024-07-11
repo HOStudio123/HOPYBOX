@@ -1,3 +1,12 @@
+'''
+Copyright (c) 2022-2024 HOStudio123(ChenJinlin).
+All Rights Reserved.
+'''
+
+#!/usr/bin/env python3
+
+# -*- coding:utf-8 -*-
+
 import os
 import time
 import webbrowser
@@ -71,8 +80,8 @@ class Hoget:
     while size > 1024:
       size /= 1024
       num += 1
-    unit = ['B','KIB','MIB','GIB','TIB','PIB']
-    return f"{size:.2f} ".rstrip(".0").zfill(1)+unit[num]
+    unit_set = ['B','KIB','MIB','GIB','TIB','PIB']
+    return f"{size:.2f} ".rstrip(".0").zfill(1)+unit_set[num]
 
 hoget = Hoget()
     

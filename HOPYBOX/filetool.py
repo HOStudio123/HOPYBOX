@@ -1,13 +1,46 @@
-import os
+'''
+Copyright (c) 2022-2024 HOStudio123(ChenJinlin).
+All Rights Reserved.
+'''
+
+#!/usr/bin/env python3
+
+# -*- coding:utf-8 -*-
+
+import os,re
 if os.name not in ['nt','java']:
   import pwd
   import grp
 import time
+import json
+import shutil
 from rich import console,syntax
 from prompt_toolkit import prompt
+from prompt_toolkit import PromptSession
+from prompt_toolkit.key_binding import KeyBindings
+from prompt_toolkit.lexers import PygmentsLexer
+from pygments.lexers.sql import SqlLexer
+from pygments.lexers.python import PythonLexer
+from pygments.lexers.html import HtmlLexer
+from pygments.lexers.javascript import JavascriptLexer
+from prompt_toolkit.formatted_text import HTML
+from http.server import HTTPServer, BaseHTTPRequestHandler
 from .prompt import error_cross
+from .prompt import ask_proceed
 from .prompt import tip_tick
+from .connect import browser
 from .tree import tree
+
+bindings = KeyBindings()
+running = 0
+
+@bindings.add('c-e')
+def exit_(event):
+  event.app.exit()
+  
+@bindings.add('c-s')
+def return_(event):
+  event.current_buffer.validate_and_handle()
 
 language_types = {
     ".py": "python",
@@ -80,9 +113,10 @@ def guess_encoding(path):
 
 class Filetool:
   def __init__(self,path):
-    if os.path.isfile(r'%s' % path):
-      self.path = path
-      self.abspath = os.path.abspath(path)
+    normal_path = os.path.normpath(path)
+    if os.path.isfile(normal_path):
+      self.path = normal_path
+      self.abspath = os.path.abspath(normal_path)
     else:
       raise FileNotFoundError
   @property
@@ -170,8 +204,75 @@ class Filetool:
     group_permissions = ''.join(['rwx'[i] if permissions >> (5 - i) & 0b001 else '---'[i] for i in range(3)])
     other_permissions = ''.join(['rwx'[i] if permissions >> (2 - i) & 0b001 else '---'[i] for i in range(3)])
     return owner_permissions + group_permissions + other_permissions
+
+class Bin_system():
+  def __init__(self,path=None):
+    self.home_path = os.path.join(os.path.expanduser('~'),'.hopybox')
+    self.record_path = os.path.join(self.home_path,'bin.json')
+    self.bin_path = os.path.join(os.path.expanduser('~'),'.hopybox','.File_Recycle')
+    if not os.path.exists(self.record_path):
+      with open(self.record_path,'w') as f:
+        json.dump({},f)
+    if path:
+      self.basepath = os.path.basename(path)
+      self.abspath = os.path.abspath(path)
+      self.move_path = os.path.join(self.bin_path,self.basepath)
+      if os.path.isdir(self.move_path) and os.path.isdir(path):
+        base,extension = os.path.splitext(self.basepath)
+        new_name = f"{base}_{int(time.time())}{extension}"
+        self.move_path = os.path.join(self.bin_path,new_name)
+      else:
+        if os.path.isfile(self.move_path) and os.path.isfile(path):
+          base,extension = os.path.splitext(self.basepath)
+          new_name = f"{base}_{int(time.time())}{extension}"
+          self.move_path = os.path.join(self.bin_path,new_name) 
+  @property
+  def load_records(self):
+    with open(self.record_path,'r') as f:
+      return json.load(f)
+  def save_records(self,records):
+    with open(self.record_path,'w') as f:
+      json.dump(records,f,indent=2)
+  @property
+  def common_remove(self):
+    records = self.load_records
+    shutil.move(self.abspath,self.move_path)
+    records[self.basepath] = [self.abspath,"File" if os.path.isfile(self.abspath) else "Dir"]
+    self.save_records(records)
+    tip_tick('Successfully moved to the file Recycle bin')
+  @property
+  def restore(self):
+    i = 0
+    records = self.load_records
+    records_list = list()
+    for item in records:
+      i+=1
+      print(f'\033[92m[{i}] \033[96m[{records[item][1]}] \033[97m{item} \033[94m({filetool(os.path.join(self.bin_path,item)).size})')
+      records_list.append([item,records[item]])
+    back_path = records_list[int(input('\033[95mWhich file do you want to restore ? \033[0m'))-1]
+    now_path = os.path.join(self.bin_path,back_path[0])
+    shutil.move(now_path,back_path[1][0])
+    del records[back_path[0]]
+    self.save_records(records)
+    tip_tick("Successfully restored the file")
+  @property
+  def clear(self):
+    while True:
+      result = ask_proceed('This operation will permanently erase all files in the recycle bin')
+      if result == True:
+        shutil.rmtree(self.bin_path)
+        os.mkdir(os.path.join(os.path.expanduser('~'),'.hopybox','.File_Recycle'))
+        with open(self.record_path,'w') as f:
+          json.dump({},f)
+        tip_tick('Successfully emptied the recycle bin')
+        break
+      elif result == None:
+        continue
+      else:
+        break
     
 filetool = Filetool
+bin_system = Bin_system
 
 class Scanner:
   def __init__(self,path,extension):
@@ -197,10 +298,36 @@ class Scanner:
           if extension == self.extension:
             self.total_find+=1
             size = filetool(full_path).size
-            print(f'\033[96m{full_path} ({size})\033[0m')
+            print(f'\033[96m{full_path} \033[94m({size})\033[0m')
+            
+class exec_file:
+  def html(self,path):
+    pass
             
 class Editingtool:
-  def __init__(self):
-    prompt('', multiline=True)
-
+  def __init__(self,filename):
+    self.filename = os.path.normpath(filename)
+    if os.path.isfile(self.filename):
+      with open(self.filename,'r') as f:
+        self.cache = f.read()
+    else:
+      self.cache = ''
+  def prompt_bar(self):
+    return HTML(f'<b> {self.filename} [Save:Ctrl+S] [Exit:Ctrl+E]</b>')
+  def line_num_display(self,width,line_number,is_soft_wrap):
+    return str(line_number+1)+' '
+  @property
+  def edit(self):
+    support_lexer = {'.py':PythonLexer,'.sql':SqlLexer,'.html':HtmlLexer,'.js':JavascriptLexer}
+    if os.path.splitext(self.filename)[1] in support_lexer:
+      session = PromptSession(lexer=PygmentsLexer(support_lexer[os.path.splitext(self.filename)[1]]))
+      text = session.prompt('1 ',multiline=True,key_bindings=bindings,prompt_continuation=self.line_num_display,bottom_toolbar=self.prompt_bar,default=self.cache)
+    else:
+      text = prompt('1 ',multiline=True,key_bindings=bindings,prompt_continuation=self.line_num_display,bottom_toolbar=self.prompt_bar,default=self.cache)
+    if text != None:
+      with open(self.filename,'w') as f:
+        f.write(text)
+      tip_tick(f'Successfully saved the text in {os.path.abspath(self.filename)}')
+          
 scanner = Scanner
+editingtool = Editingtool

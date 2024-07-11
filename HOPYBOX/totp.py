@@ -1,3 +1,12 @@
+'''
+Copyright (c) 2022-2024 HOStudio123(ChenJinlin).
+All Rights Reserved.
+'''
+
+#!/usr/bin/env python3
+
+# -*- coding:utf-8 -*-
+
 import os
 import pyotp
 from base64 import b64encode, b64decode
@@ -29,16 +38,14 @@ def decrypt(password,encrypted_text):
 
 class Totp:
   def __init__(self):
-    if not os.path.isdir(os.path.join(os.path.expanduser('~'),'hopybox')):
-      os.mkdir(os.path.join(os.path.expanduser('~'),'hopybox'))
-    self.set_path = os.path.join(os.path.expanduser('~'),'hopybox/.totp')
+    self.set_path = os.path.join(os.path.expanduser('~'),'.hopybox','.totp')
   def set(self):
     servers = input('\033[95mServes Name\n\033[0m').replace(' ','')
     account = input('\033[95mAccount name\n\033[0m').replace(' ','')
-    secret = encipher(servers+account,getpass('TOTP Secret Key\n','green'))
+    totp = encipher(servers+account,getpass('TOTP Secret Key\n','green'))
     with open(self.set_path,'a+') as f:
-      print(f"{servers} {account} {secret}",file=f)
-    tip_tick("Succeeded in setting")
+      print(f"{servers} {account} {totp}",file=f)
+    tip_tick("Succeeded in setting the 2FA service")
   def display(self):
     with open(self.set_path, 'r') as f: 
       line = f.readline()
@@ -62,12 +69,12 @@ class Totp:
       line = int(input("\033[0m\033[95mWhich 2FA service do you want to delete ? \033[0m"))
       if 0 < line <= len(lines):
         while True:
-          result = ask_proceed("Do you really want to permanently delete this 2FA service ?")
+          result = ask_proceed("This operation permanently erases the 2FA service")
           if result == True:
             del lines[line-1]
             with open(self.set_path,'w') as f:
               f.writelines(lines)
-            tip_tick('Successfully deleted')
+            tip_tick('Successfully deleted the 2FA service')
             break
           elif result == None:
             continue

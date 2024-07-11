@@ -1,3 +1,12 @@
+'''
+Copyright (c) 2022-2024 HOStudio123(ChenJinlin).
+All Rights Reserved.
+'''
+
+#!/usr/bin/env python3
+
+# -*- coding:utf-8 -*-
+
 command_data = dict()
 
 def _command_add(mode,name,code,operate,details):
@@ -7,7 +16,7 @@ def _command_add(mode,name,code,operate,details):
     command_data[mode] = {name:{'code':code,'help':{'operate':operate,'details':details}}}
 
 def command_data_add():
-  _command_add('Key','Control',None,['Control-C','Control-D'],['Enable or exit mouse mode','Exit the program'])
+  _command_add('Key','Ctrl',None,['Ctrl+C','Ctrl+D'],['Enable or exit mouse mode, Mouse mode defaults to off','Exit the program'])
   _command_add('Global','help',"if 'run' in command_data['Global']['help']:\n  print(command_help(_mode,command_data['Global']['help']['run']))\nelse:\n  command_help(None,None)",'help {command}','Type "help {command}" for help about this command or "help" for help about all commands')
   _command_add('Global','exit','exit()','exit','Exit the program')
   _command_add('Global','clear','clear()','clear','Clear console')
@@ -16,7 +25,7 @@ def command_data_add():
   _command_add('Program','hoget',"hoget.main(command_data['Program']['hoget']['run'])",'hoget {URL}','To access website addresses')
   _command_add('Program','browser',"browser(command_data['Program']['browser']['run'])",'browser {URL}','Initiate your browser and visit url')
   _command_add('Program','uplog',"update_log_get(command_data['Program']['uplog']['run'])",'uplog {version}','To get a update log about the version object, type "uplog all" can view all the update log')
-  _command_add('Program','terminal',"terminal('sh')",'terminal','Entering the system terminal')
+  _command_add('Program','terminal',"terminal('powershell' if os.name == 'nt' else 'sh')",'terminal','Entering the system terminal')
   _command_add('Program','author','print(__author__)','author','Learn about program developer name')
   _command_add('Program','copyright','print(__copyright__)','copyright','Learn about program copyright')
   _command_add('Program','version','print(_version_all)','version','Learn about program version')
@@ -24,6 +33,8 @@ def command_data_add():
   _command_add('Program','license',"print(license())",'license','To view the license')
   _command_add('Program','feedback',"print('\033[96mIf you have any questions or suggestions, please contact the developer as\033[0m\033[4;95m hostudio.hopybox@foxmail.com')",'feedback','To get the way of feedback')
   _command_add('Program','email',"email()",'email','Send emails to people')
+  _command_add('Program','binary',"print(bin(int(command_data['Program']['binary']['run'])).replace('0b',''))",'binary {number}','Convert an integer to binary number string')
+  _command_add('Program','hexadecimal',"print(hex(int(command_data['Program']['binary']['run'])).replace('0x',''))",'binary {number}','Convert an integer to hexadecimal number string')
   _command_add('Program','totp',{'-s':"totp.set()",'-v':"totp.display()",'-d':"totp.delete()"},['totp -s','totp -v','totp -d'],['To set the 2FA key','To view the 2FA token','To delete the 2FA key'])
   _command_add('Program','translate',{'-y':"translate.YouDao().output(translate.YouDao().trans(command_data['Program']['translate']['run'],langdet(command_data['Program']['translate']['run'])[1]))",'-g':"print(translate.Google().trans(command_data['Program']['translate']['run'],langdet(command_data['Program']['translate']['run'])[1]))"},['translate -y {text}','translate -g {text}'],['To translate the word into Chinese/English by YouDao','To translate the word into Chinese/English by Google'])
   _command_add('Program','download',"download(command_data['Program']['download']['run'])",'download','To get the way of feedback')
@@ -35,7 +46,7 @@ def command_data_add():
   _command_add('Device','info','device.info()','info','To get the device info')
   _command_add('Device','ip',{'-l':'print(device.Web().IP().local())','-p':'print(device.Web().IP().public())'},['ip -l','ip -p'],['To get the local ip address','To get the public ip address'])
   _command_add('Device','system',{'-n':'print(device.System().name())','-v':'print(device.System().version())','-l':'print(device.System().language())','-e':'print(device.System().encode())','-r':'print(device.System().release())'},['system -n','system -v','system -l','system -e','system -r'],['To get the system name','To get the system version','To get the system language','To get the system encode','To get the system release'])
-  _command_add('Device','processor',{'-i':'print(device.Processor().info())','-l':'print(device.Processor().logic_count())','-c':'print(device.Processor().core_count())'},['processor -i','processor -l','processor -c'],['To get the processor info','To get the cpu logic count','To get the cpu core count'])
+  _command_add('Device','processor',{'-i':'print(device.Processor().info())','-c':'print(device.Processor().logic_count())'},['processor -i','processor -c'],['To get the processor info','To get the cpu logic count'])
   _command_add('Device','mac','print(device.Web().mac())','mac','To get the device mac')
   _command_add('Device','fps','print(device.Fps().fps())','fps','To get the device fps')
   _command_add('Device','network','print(device.Web().network())','network','To get the name of device network')
@@ -53,13 +64,15 @@ def command_data_add():
   _command_add('File','workdir','print(os.getcwd())','workdir','To get the work path')
   _command_add('File','home',"print(os.path.expanduser('~'))",'workdir','To get the home path')
   _command_add('File','tree',"tree(command_data['File']['tree']['run'])",'tree {dir}','Drawing the file tree directory')
-  _command_add('File','open',"filetool(command_data['File']['open']['run']).view",'open {path}','To view the content of file')
+  _command_add('File','view',"filetool(command_data['File']['view']['run']).view",'view {path}','To view the content of file')
   _command_add('File','info',"filetool(command_data['File']['info']['run']).info",'info {path}','To view the information of file')
   _command_add('File','scan',"print(scanner(command_data['File']['scan']['run'][0],command_data['File']['scan']['run'][1]).scan_extension)",'scan {path} {extension}','Scanning the path')
   _command_add('File','chdir',"os.chdir(command_data['File']['chdir']['run'])\ntip_tick('The working directory is switched successfully')",'chdir {path}','To switch the work path')
   _command_add('File','worklist','tree(os.getcwd())','worklist','To get the work dir list')
   _command_add('File','mkdir',"os.mkdir(command_data['File']['mkdir']['run'])",'mkdir {dir}','To create a dir')
-  _command_add('File','remove',{'-f':"os.remove(command_data['File']['remove']['run'])",'-d':"os.rmdir(command_data['File']['remove']['run'])"},['remove -f {path}','remove -d {dir}'],['To remove the file','To remove the dir'])
+  _command_add('File','remove',{'-c':"bin_system(path=command_data['File']['remove']['run']).common_remove",'-s':"bin_system(path=command_data['File']['remove']['run']).super_remove",'-d':"bin_system(path=command_data['File']['remove']['run']).direct_remove"},['remove -c {path}','remove -s {path}','remove -d {path}'],['To remove the file or the dir to the bin','Use overwrite to remove the file or the dir directly and permanently','To remove the file or the dir directly and permanently'])
+  _command_add('File','bin',{'-r':"bin_system().restore",'-c':"bin_system().clear"},['bin -r','bin -c'],['To restore the file or the dir','To remove the file or the dir which in this bin'])
+  _command_add('File','edit',"editingtool(command_data['File']['edit']['run']).edit",'edit {filname}','Used to create a new text or edit the text')
 
 def command_help(mode,command):
   record = ''

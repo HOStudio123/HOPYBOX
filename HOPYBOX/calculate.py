@@ -1,3 +1,12 @@
+'''
+Copyright (c) 2022-2024 HOStudio123(ChenJinlin).
+All Rights Reserved.
+'''
+
+#!/usr/bin/env python3
+
+# -*- coding:utf-8 -*-
+
 import math
 import sympy
 from math import *
@@ -45,6 +54,6 @@ class Calculate:
       return 2*math.pi*self.radius
     @property
     def diameter(self):
-      return radius*2
+      return self.radius*2
 
 calculate = Calculate()

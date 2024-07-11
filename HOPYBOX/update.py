@@ -1,3 +1,12 @@
+'''
+Copyright (c) 2022-2024 HOStudio123(ChenJinlin).
+All Rights Reserved.
+'''
+
+#!/usr/bin/env python3
+
+# -*- coding:utf-8 -*-
+
 from rich.console import Console
 from os import system
 from requests import get
@@ -6,7 +15,7 @@ from .prompt import error_cross
 from .prompt import ask_proceed
 
 console = Console()
-update_version_number = 190
+update_version_number = 192
 update_log_content = {}
 
 def update_log_add(version,date,text):
@@ -66,6 +75,10 @@ update_log_add('1.8.4','Jun 22 2024','* Supports color text on Windows')
 update_log_add('1.8.6','Jun 28 2024','* Fixed some known issues')
 update_log_add('1.8.7','Jun 29 2024','* Fixed some known issues\n* Add some new commands')
 update_log_add('1.9.0','Jun 29 2024','* Fixed some known issues\n* Add some new commands')
+update_log_add('1.9.1','Jun 29 2024','* Fixed some known issues\n* Add some new commands')
+update_log_add('1.9.2','July 6 2024','* Fixed some known issues\n* Add some new commands\n* Removed some commands')
+update_log_add('1.9.3','July 6 2024','* Fixed some known issues\n* Add some new commands\n* Removed some commands')
+
 
 def update_log_get(version):
   try:
