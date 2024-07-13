@@ -1,7 +1,7 @@
 # HOPYBOX
-This is an open source, practical command python box
+This is an open-source and practical command box
 ## Introduce
-This is an open source, practical command python box, since it is made in python language, so I named it **HOPYBOX**.
+This is an open-source and practical command box, since it is made in python language, so I named it **HOPYBOX**.
 ## Installing
 Install with `pip` or your favorite PyPI package manager.
 ```sh
