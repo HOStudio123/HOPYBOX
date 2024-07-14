@@ -103,16 +103,16 @@ with Console().status("\033[96mLoading resources …\033[0m"):
     # store system
     _store = ""
     # hopybox artword
-    hopybox_artword = '''\033[96m
+    hopybox_artword = r"""
  _   _  _____  ____  __     __ ____  _____  __  __
 | | | ||  _  ||  _ \ \ \   / /|  _ \|  _  | \ \/ /
 | |_| || | | || |_| | \ \_/ / | |_| | | | |  \  /
-|  _  || | | ||  __/   \   /  |  _ <| | | |  /  \\
-| | | || |_| || |       | |   | |_| | |_| | / /\ \\
-|_| |_||_____||_|       |_|   |____/|_____|/_/  \_\\
+|  _  || | | ||  __/   \   /  |  _ <| | | |  /  \
+| | | || |_| || |       | |   | |_| | |_| | / /\ \
+|_| |_||_____||_|       |_|   |____/|_____|/_/  \_\
 
-This is an open-source and practical command box.
-'''
+An open-source and practical command box.
+"""
     # hopybox update log
     update_log_dict = dict()
     update_log_dict["all"] = None
