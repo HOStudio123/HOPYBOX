@@ -1,5 +1,4 @@
 # HOPYBOX
-This is an open-source and practical command box
 ## Introduce
 This is an open-source and practical command box, since it is made in python language, so I named it **HOPYBOX**.
 ## Installing
@@ -16,12 +15,12 @@ $ python -m hopybox
 $ hopybox
 ```
 ```python
->>>from hopybox import __main__
->>>__main__.start()
+>>> from hopybox import __main__
+>>> __main__.start()
 ```
 ## Import method
 ```python
->>>from hopybox import *
+>>> from hopybox import *
 ```
 ## Usage
 See help built in the program
