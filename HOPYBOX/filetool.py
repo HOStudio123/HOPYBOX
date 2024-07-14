@@ -7,13 +7,16 @@ All Rights Reserved.
 
 # -*- coding:utf-8 -*-
 
-import os,re
-if os.name not in ['nt','java']:
-  import pwd
-  import grp
+import os
+import re
 import time
 import json
 import shutil
+
+if os.name not in ['nt','java']:
+  import pwd
+  import grp
+
 from rich import console,syntax
 from prompt_toolkit import prompt
 from prompt_toolkit import PromptSession
@@ -25,6 +28,7 @@ from pygments.lexers.html import HtmlLexer
 from pygments.lexers.javascript import JavascriptLexer
 from prompt_toolkit.formatted_text import HTML
 from http.server import HTTPServer, BaseHTTPRequestHandler
+
 from .prompt import error_cross
 from .prompt import ask_proceed
 from .prompt import tip_tick

@@ -13,6 +13,11 @@ import os,re
 if os.name == 'nt':
   os.system('')
 
+# make dir
+if not os.path.isdir(os.path.join(os.path.expanduser('~'),'.hopybox')):
+  os.mkdir(os.path.join(os.path.expanduser('~'),'.hopybox'))
+  os.mkdir(os.path.join(os.path.expanduser('~'),'.hopybox','.File_Recycle'))
+
 from rich.console import Console
 with Console().status("\033[96mLoading resources …\033[0m"):
   # prompt_toolkit
@@ -20,8 +25,6 @@ with Console().status("\033[96mLoading resources …\033[0m"):
   from prompt_toolkit.styles import Style
   from prompt_toolkit.completion import NestedCompleter
   from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-  # datetime
-  from datetime import datetime
   # getpass
   from getpass import getuser
   # platform
@@ -61,47 +64,45 @@ with Console().status("\033[96mLoading resources …\033[0m"):
   from .timetool import timetool
   # license
   from .LICENSE import license
-  # TOTP
-  from .totp import totp
+  # cipher
+  from .cipher import cipher
+  from .cipher import two_factor
   # some information of hopybox
   __author__ = 'HOStudio123'
   __email__ = 'hostudio.hopybox@foxmail.com'
   __license__ = 'GPL-3.0 license'
-  __copyright__ = 'Copyright (c) 2022-2024 HOStudio123(ChenJinlin).\nAll Rights Reserved.'    
+  __copyright__ = 'Copyright (c) 2022-2024 HOStudio123.\nAll Rights Reserved.'    
   # mode
   _mode_type = ['Program','Device','File','Calculate']
   _mode = _mode_type[0]
   # windows
   _windows = 0
   # version
-  _version_code = '1.9.3'
+  _version_code = '1.9.4'
   _version_type = 'default'
   _version_all = f'\033[95m* HOPYBOX Version {_version_code}\n* Python Version {python_version()}'
   # update time
-  _update_time = '18:40:00'
+  _update_time = '19:30:00'
   # command
   command_data_add()
   # store system
   _store = ''
   # hopybox artword
-  hopybox_artword = '''
+  hopybox_artword = '''\033[96m
  _   _  _____  ____  __     __ ____  _____  __  __                     
 | | | ||  _  ||  _ \ \ \   / /|  _ \|  _  | \ \/ /                  
 | |_| || | | || |_| | \ \_/ / | |_| | | | |  \  /                      
 |  _  || | | ||  __/   \   /  |  _ <| | | |  /  \                      
 | | | || |_| || |       | |   | |_| | |_| | / /\ \                     
-|_| |_||_____||_|       |_|   |____/|_____|/_/  \_\                    
- 
+|_| |_||_____||_|       |_|   |____/|_____|/_/  \_\    
+
+This is an open-source and practical command box.                
   '''
   # hopybox update log
   update_log_dict = dict()
   update_log_dict['all'] = None
   for i in update_log_content:
     update_log_dict[i] = None
-  # make dir
-  if not os.path.isdir(os.path.join(os.path.expanduser('~'),'.hopybox')):
-    os.mkdir(os.path.join(os.path.expanduser('~'),'.hopybox'))
-    os.mkdir(os.path.join(os.path.expanduser('~'),'.hopybox','.File_Recycle'))
 
 # command prompt list
 def help_list_update():
@@ -215,7 +216,7 @@ def start():
   mouse_support = False
   times = 0
   # start text
-  print(f"\033[96mWELCOME TO HOPYBOX\n\033[0m\033[92m[USER:{getuser()}] [RUN:{datetime.now().strftime('%H:%M:%S')}]\033[0m\nHOPYBOX {_version_code} ({_version_type}, {update_log_content[_version_code]['date']}, {_update_time})\n[Python {python_version()}] on {system()}\nType \"help\" , \"copyright\" , \"version\" ,\"feedback\" or \"license\" for more information")
+  print(f"\033[96mWELCOME TO HOPYBOX\n\033[0m\033[92m[USER:{getuser()}] [RUN:{timetool.hms}]\033[0m\nHOPYBOX {_version_code} ({_version_type}, {update_log_content[_version_code]['date']}, {_update_time})\n[Python {python_version()}] on {system()}\nType \"help\" , \"copyright\" , \"version\" ,\"feedback\" or \"license\" for more information")
   style = Style.from_dict({'prompt':'yellow'})
   completer = NestedCompleter.from_nested_dict(_format_command())
   session = PromptSession(style=style)

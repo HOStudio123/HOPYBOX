@@ -85,13 +85,13 @@ class Device:
       return f'{round(memory.percent)}%'
   class Storage:
     def total(self,path):
-      storage = psutil.disk_usage(path)
+      storage = shutil.disk_usage(path)
       return f'{storage.total/(1024**3):.2f}GB'
     def used(self,path):
-      storage = psutil.disk_usage(path)
+      storage = shutil.disk_usage(path)
       return f'{storage.used/(1024**3):.2f}GB'
     def free(self,path):
-      storage = psutil.disk_usage(path)
+      storage = shutil.disk_usage(path)
       return f'{storage.free/(1024**3):.2f}GB'
     def available(self,path):
       storage = psutil.disk_usage(path)
