@@ -30,7 +30,8 @@ dependencies = [
     "rich>=13.0.0",
     "psutil>=5.8.0",
     "prompt_toolkit>=3.0.0",
-    "pycryptodome>=3.0.0"
+    "pycryptodome>=3.0.0",
+    "colorama"
 ]    
 
 [project.urls]

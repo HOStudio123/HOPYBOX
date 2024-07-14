@@ -7,11 +7,10 @@ All Rights Reserved.
 
 # -*- coding:utf-8 -*-
 
-import os, re
+import os, re, colorama
 
 # color
-if os.name == "nt":
-    os.system("")
+colorama.init()
 
 # make dir
 if not os.path.isdir(os.path.join(os.path.expanduser("~"), ".hopybox")):
