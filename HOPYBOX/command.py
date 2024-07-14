@@ -1,11 +1,11 @@
+#!/usr/bin/env python3
+
+# -*- coding:utf-8 -*-
+
 '''
 Copyright (c) 2022-2024 HOStudio123(ChenJinlin).
 All Rights Reserved.
 '''
-
-#!/usr/bin/env python3
-
-# -*- coding:utf-8 -*-
 
 command_data = dict()
 
@@ -33,9 +33,15 @@ def command_data_add():
   _command_add('Program','license',"print(license())",'license','To view the license')
   _command_add('Program','feedback',"print('\033[96mIf you have any questions or suggestions, please contact the developer as\033[0m\033[4;95m hostudio.hopybox@foxmail.com')",'feedback','To get the way of feedback')
   _command_add('Program','email',"email()",'email','Send emails to people')
-  _command_add('Program','binary',"print(bin(int(command_data['Program']['binary']['run'])).replace('0b',''))",'binary {number}','Convert an integer to binary number string')
-  _command_add('Program','hexadecimal',"print(hex(int(command_data['Program']['binary']['run'])).replace('0x',''))",'binary {number}','Convert an integer to hexadecimal number string')
-  _command_add('Program','totp',{'-s':"totp.set()",'-v':"totp.display()",'-d':"totp.delete()"},['totp -s','totp -v','totp -d'],['To set the 2FA key','To view the 2FA token','To delete the 2FA key'])
+  _command_add('Program','bin',"print(bin(int(command_data['Program']['bin']['run'])).replace('0b',''))",'bin {number}','Convert an integer to binary number string')
+  _command_add('Program','hex',"print(hex(int(command_data['Program']['hex']['run'])).replace('0x',''))",'hex {number}','Convert an integer to hexadecimal number string')
+  _command_add('Program','oct',"print(oct(int(command_data['Program']['oct']['run'])).replace('0o',''))",'oct {number}','Convert an integer to octal number string')
+  _command_add('Program','ord',"print(ord(command_data['Program']['ord']['run']))",'ord {string}','Returns the integer representing its Unicode codepoint for a string representing a single Unicode character')
+  _command_add('Program','chr',"print(chr(int(command_data['Program']['chr']['run'])))",'chr {number}','Returns the string format of a character whose Unicode codepoint is the integer i')
+  _command_add('Program','md5',"print(cipher(command_data['Program']['md5']['run']).en_md5)",'md5 {text}','The text is encrypted using the md5 algorithm')
+  _command_add('Program','sha256',"print(cipher(command_data['Program']['sha256']['run']).en_sha256)",'chr {number}','Encrypt text with sha256 algorithm')
+  _command_add('Program','sha512',"print(cipher(command_data['Program']['sha512']['run']).en_sha512)",'chr {number}','Encrypt text with sha512 algorithm')
+  _command_add('Program','tf',{'-p':"two_factor._set_pin",'-a':"two_factor._add_factor",'-v':"two_factor._output",'-d':"two_factor._delete"},['tf -p','tf -a','tf -v','tf -d'],['To set the PIN code to protect the two-factor','To add the two-factor pin','To view the two-factor token','To delete the two-factor key'])
   _command_add('Program','translate',{'-y':"translate.YouDao().output(translate.YouDao().trans(command_data['Program']['translate']['run'],langdet(command_data['Program']['translate']['run'])[1]))",'-g':"print(translate.Google().trans(command_data['Program']['translate']['run'],langdet(command_data['Program']['translate']['run'])[1]))"},['translate -y {text}','translate -g {text}'],['To translate the word into Chinese/English by YouDao','To translate the word into Chinese/English by Google'])
   _command_add('Program','download',"download(command_data['Program']['download']['run'])",'download','To get the way of feedback')
   _command_add('Program','hopybox',"print(hopybox_artword)",'hopybox','To get the wordart of hopybox')
