@@ -147,8 +147,7 @@ class Two_factor:
                     key = cipher(self.pin_load).en_base64
                     otp = self.otp_pro(cipher(i[3]).de_fernet(key))
                     del key
-                except Exception as e:
-                    print(e)
+                except Exception:
                     otp = "(Worng Formatting)"
                 finally:
                     print(f"\033[92m[{i[1]}] \033[94m({i[2]}) \033[97m{otp}")
