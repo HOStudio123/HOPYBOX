@@ -1,12 +1,3 @@
-"""
-Copyright (c) 2022-2024 HOStudio123(ChenJinlin).
-All Rights Reserved.
-"""
-
-#!/usr/bin/env python3
-
-# -*- coding:utf-8 -*-
-
 from prompt_toolkit import prompt
 from prompt_toolkit.styles import Style
 

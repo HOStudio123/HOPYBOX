@@ -1,12 +1,3 @@
-"""
-Copyright (c) 2022-2024 HOStudio123(ChenJinlin).
-All Rights Reserved.
-"""
-
-#!/usr/bin/env python3
-
-# -*- coding:utf-8 -*-
-
 import os
 import smtplib
 from email import encoders
