@@ -123,6 +123,9 @@ update_log_add(
 update_log_add(
     "1.9.5", "July 15 2024", "* Fixed some known issues\n* Add some new commands"
 )
+update_log_add(
+    "1.9.6", "July 16 2024", "* Fixed some known issues\n* Add some new commands"
+)
 
 
 def update_log_get(version):

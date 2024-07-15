@@ -92,11 +92,11 @@ with Console().status("\033[96mLoading resources …\033[0m"):
     # windows
     _windows = 0
     # version
-    _version_code = "1.9.5"
+    _version_code = "1.9.6"
     _version_type = "default"
     _version_all = f"\033[95m* HOPYBOX Version {_version_code}\n* Python Version {python_version()}"
     # update time
-    _update_time = "19:30:00"
+    _update_time = "06:30:00"
     # command
     command_data_add()
     # store system
@@ -144,9 +144,7 @@ def _switch(mode):
         completer = NestedCompleter.from_nested_dict(_format_command())
         tip_tick("Program mode switched successfully")
     else:
-        error_cross(
-            "SwitchError", _mode, "The mode was not found", _store.split(" ", 1)[1]
-        )
+        error_cross("SwitchError", _mode, "The mode was not found", _store.split(" ", 1)[1])
 
 
 # exception
@@ -251,13 +249,7 @@ def start():
     while True:
         _windows += 1
         try:
-            _command = session.prompt(
-                f"[{_windows}]HOPYBOX/{_mode}:",
-                completer=completer,
-                style=style,
-                mouse_support=mouse_support,
-                auto_suggest=AutoSuggestFromHistory(),
-            )
+            _command = session.prompt(f"[{_windows}]HOPYBOX/{_mode}:",completer=completer,style=style,mouse_support=mouse_support,auto_suggest=AutoSuggestFromHistory())
         except EOFError:
             exit()
         except KeyboardInterrupt:
