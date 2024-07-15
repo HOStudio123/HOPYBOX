@@ -115,6 +115,7 @@ class Two_factor:
     timestamp = int(time.time())
     key = cipher(self.pin_load).en_base64
     token = cipher(getpass('Secret Key\n','green')).en_fernet(key)
+    del key
     data = (timestamp,server,account,token)
     self.add(data)
     tip_tick('Succeeded in setting the two-factor')

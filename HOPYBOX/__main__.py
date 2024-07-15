@@ -9,62 +9,60 @@ All Rights Reserved.
 
 import os,re
 
-# color
+# color support
 if os.name == 'nt':
   os.system('')
 
-# make dir
-if not os.path.isdir(os.path.join(os.path.expanduser('~'),'.hopybox')):
-  os.mkdir(os.path.join(os.path.expanduser('~'),'.hopybox'))
-  os.mkdir(os.path.join(os.path.expanduser('~'),'.hopybox','.File_Recycle'))
+# make data dir
+os.makedirs(os.path.join(os.path.expanduser('~'),'.hopybox','.File_Recycle'),exist_ok=True)
 
 from rich.console import Console
 with Console().status("\033[96mLoading resources …\033[0m"):
-  # prompt_toolkit
+  # prompt_toolkit library
   from prompt_toolkit import PromptSession
   from prompt_toolkit.styles import Style
   from prompt_toolkit.completion import NestedCompleter
   from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-  # getpass
+  # getpass library
   from getpass import getuser
-  # platform
+  # platform library
   from platform import system
   from platform import python_version
-  # device
+  # device library
   from .device import device
-  # prompt
+  # prompt library
   from .prompt import error_cross
   from .prompt import tip_tick
-  # connect
+  # connect library
   from .connect import hoget
   from .connect import browser
   from .connect import download
-  # mail
+  # mail library
   from .mail import email
-  # translate
+  # translate library
   from .translate import langdet
   from .translate import translate
-  # command
+  # command library
   from .command import command_help
   from .command import command_data
   from .command import command_data_add
-  # update
+  # update library
   from .update import update_log_get
   from .update import update_log_content
   from .update import update_program
-  # calculate
+  # calculate library
   from .calculate import calculate
-  # filetool
+  # filetool library
   from .filetool import filetool
   from .filetool import editingtool
   from .filetool import tree
   from .filetool import bin_system
   from .filetool import scanner
-  # timetool
+  # timetool library
   from .timetool import timetool
   # license
   from .LICENSE import license
-  # cipher
+  # cipher library
   from .cipher import cipher
   from .cipher import two_factor
   # some information of hopybox
@@ -78,7 +76,7 @@ with Console().status("\033[96mLoading resources …\033[0m"):
   # windows
   _windows = 0
   # version
-  _version_code = '1.9.4'
+  _version_code = '1.9.5'
   _version_type = 'default'
   _version_all = f'\033[95m* HOPYBOX Version {_version_code}\n* Python Version {python_version()}'
   # update time
@@ -88,13 +86,13 @@ with Console().status("\033[96mLoading resources …\033[0m"):
   # store system
   _store = ''
   # hopybox artword
-  hopybox_artword = '''\033[96m
- _   _  _____  ____  __     __ ____  _____  __  __                     
-| | | ||  _  ||  _ \ \ \   / /|  _ \|  _  | \ \/ /                  
-| |_| || | | || |_| | \ \_/ / | |_| | | | |  \  /                      
-|  _  || | | ||  __/   \   /  |  _ <| | | |  /  \                      
-| | | || |_| || |       | |   | |_| | |_| | / /\ \                     
-|_| |_||_____||_|       |_|   |____/|_____|/_/  \_\    
+  hopybox_artword = r'''
+ _   _  _____  ____ __     __ ____  _____  __  __                     
+| | | ||  _  ||  _ \\ \   / /|  _ \|  _  | \ \/ /                  
+| |_| || | | || |_| |\ \_/ / | |_| | | | |  \  /                      
+|  _  || | | ||  __/  \   /  |  _ <| | | |  /  \                      
+| | | || |_| || |      | |   | |_| | |_| | / /\ \                     
+|_| |_||_____||_|      |_|   |____/|_____|/_/  \_\    
 
 This is an open-source and practical command box.                
   '''
@@ -115,7 +113,7 @@ def terminal(command):
   os.system(command)
 
 def clear():
-  print("\033c",end="")
+  print('\033c',end='')
   terminal('cls' if os.name == 'nt' else 'clear')
   
 # switch mode
@@ -237,6 +235,7 @@ def start():
       continue
     _store = _command
     run(_command)
-    
+
+# python -m hopybox
 if __name__ == '__main__':
   start()
