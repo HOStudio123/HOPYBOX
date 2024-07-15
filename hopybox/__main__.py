@@ -14,9 +14,7 @@ if os.name == "nt":
     os.system("")
 
 # make data dir
-os.makedirs(
-    os.path.join(os.path.expanduser("~"), ".hopybox", ".File_Recycle"), exist_ok=True
-)
+os.makedirs(os.path.join(os.path.expanduser("~"),".hopybox",".File_Recycle"), exist_ok=True)
 
 from rich.console import Console
 
