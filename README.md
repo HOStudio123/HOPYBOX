@@ -38,6 +38,6 @@ or like this
 $ pip install -U hopybox
 ```
 ## License
-Copyright (c) 2022-2024 HOStudio123(ChenJinlin), All Rights Reserved.
+Copyright (c) 2022-2024 HOStudio123, All Rights Reserved.
 
 HOPYBOX is released under GPLv3 License.
