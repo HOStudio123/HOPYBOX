@@ -37,3 +37,7 @@ or like this
 ```sh
 $ pip install -U hopybox
 ```
+## License
+Copyright (c) 2022-2024 HOStudio123(ChenJinlin), All Rights Reserved.
+
+HOPYBOX is released under GPLv3 License.
