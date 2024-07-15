@@ -23,48 +23,63 @@ with Console().status("\033[96mLoading resources …\033[0m"):
   from prompt_toolkit.styles import Style
   from prompt_toolkit.completion import NestedCompleter
   from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+  
   # getpass library
   from getpass import getuser
+  
   # platform library
   from platform import system
   from platform import python_version
+  
   # device library
   from .device import device
+  
   # prompt library
   from .prompt import error_cross
   from .prompt import tip_tick
+  
   # connect library
   from .connect import hoget
   from .connect import browser
   from .connect import download
+  
   # mail library
   from .mail import email
+  
   # translate library
   from .translate import langdet
   from .translate import translate
+  
   # command library
   from .command import command_help
   from .command import command_data
   from .command import command_data_add
+  
   # update library
   from .update import update_log_get
   from .update import update_log_content
   from .update import update_program
+  
   # calculate library
   from .calculate import calculate
+  
   # filetool library
   from .filetool import filetool
   from .filetool import editingtool
   from .filetool import tree
   from .filetool import bin_system
   from .filetool import scanner
+  
   # timetool library
   from .timetool import timetool
+  
   # license
   from .LICENSE import license
+  
   # cipher library
   from .cipher import cipher
   from .cipher import two_factor
+  
   # some information of hopybox
   __author__ = 'HOStudio123'
   __email__ = 'hostudio.hopybox@foxmail.com'

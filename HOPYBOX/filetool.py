@@ -108,7 +108,7 @@ def guess_encoding(path):
   encodings = ['UTF-8','ASCII','ISO-8859-1','UTF-16','UTF-16LE','UTF-16BE','UTF-32','UTF-32LE','UTF-32BE','GBK','GB2312','Big5','EUC-JP', 'Shift-JIS', 'EUC-KR', 'ISO-2022-JP', 'ISO-8859-2', 'ISO-8859-3','ISO-8859-4','ISO-8859-5','ISO-8859-6','ISO-8859-7','ISO-8859-8','ISO-8859-9','ISO-8859-10','ISO-8859-13','ISO-8859-14','ISO-8859-15','ISO-8859-16','windows-1250','windows-1251','windows-1252', 'windows-1253','windows-1254','windows-1255','windows-1256','windows-1257','windows-1258','KOI8-R','KOI8-U','MacRoman','IBM855', 'IBM866', 'IBM852', 'IBM857','IBM855', 'IBM862','IBM864','IBM869','IBM1026','TIS-620', 'TSCII','VISCII','TCVN-5712','PTCP154']
   for encoding in encodings:
     try:
-      with open(path, 'r', encoding=encoding) as file:
+      with open(path,'r', encoding=encoding) as file:
         file.read(1024)
       return encoding
     except Exception:

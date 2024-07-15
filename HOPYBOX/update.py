@@ -15,7 +15,8 @@ from .prompt import error_cross
 from .prompt import ask_proceed
 
 console = Console()
-update_version_number = 194
+
+update_version_number = 195
 update_log_content = {}
 
 def update_log_add(version,date,text):
@@ -78,6 +79,7 @@ update_log_add('1.9.0','Jun 29 2024','* Fixed some known issues\n* Add some new 
 update_log_add('1.9.1','Jun 29 2024','* Fixed some known issues\n* Add some new commands')
 update_log_add('1.9.2','July 6 2024','* Fixed some known issues\n* Add some new commands\n* Removed some commands')
 update_log_add('1.9.4','July 14 2024','* Fixed some known issues\n* Add some new commands\n* Removed some commands')
+update_log_add('1.9.5','July 15 2024','* Fixed some known issues\n* Add some new commands')
 
 
 def update_log_get(version):
