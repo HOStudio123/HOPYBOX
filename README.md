@@ -5,10 +5,6 @@ This is an open-source and practical command box, since it is made in python lan
 ## Installing
 Install with `pip` or your favorite PyPI package manager.
 ```sh
-$ python -m pip install HOPYBOX
-```
-or like this
-```sh
 $ python -m pip install hopybox
 ```
 ## Run
@@ -18,21 +14,15 @@ $ python -m hopybox
 ```
 or like these
 ```sh
-$ python -m HOPYBOX
-```
-```sh
 $ hopybox
 ```
-```sh
-$ HOPYBOX
-```
 ```python
->>>from hopybox import __main__
->>>__main__.start()
+>>> from hopybox import __main__
+>>> __main__.start()
 ```
 ## Import method
 ```python
->>>from hopybox import *
+>>> from hopybox import *
 ```
 ## Usage
 See help built in the program
@@ -44,10 +34,7 @@ Enter in the `HOPYBOX` console:
 ```sh
 HOPYBOX/Program:update
 ```
-or like these
-```sh
-$ pip install -U HOPYBOX
-```
+or like this
 ```sh
 $ pip install -U hopybox
 ```

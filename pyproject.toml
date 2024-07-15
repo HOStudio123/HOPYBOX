@@ -38,4 +38,3 @@ Issues = "https://github.com/HOStudio123/HOPYBOX/issues"
 
 [project.scripts]
 hopybox = "hopybox.__main__:start"
-HOPYBOX = "hopybox.__main__:start"
