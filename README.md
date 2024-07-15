@@ -1,14 +1,13 @@
 # HOPYBOX
-This is an open-source and practical command box
-## Introduce
-This is an open-source and practical command box, since it is made in python language, so I named it **HOPYBOX**.
-## Installing
+## Introduction
+This is an open-source and practical command box, it was made in python language, so I named it `HOPYBOX`.
+## Installion
 Install with `pip` or your favorite PyPI package manager.
 ```sh
 $ python -m pip install hopybox
 ```
 ## Run
-Run the following command to run `HOPYBOX` on the terminal:
+Run the following command to run `HOPYBOX` in the terminal:
 ```sh
 $ python -m hopybox
 ```
@@ -20,16 +19,16 @@ $ hopybox
 >>> from hopybox import __main__
 >>> __main__.start()
 ```
-## Import method
+## Import all methods
 ```python
 >>> from hopybox import *
 ```
 ## Usage
-See help built in the program
+See built-in help in the program
 ```sh
 HOPYBOX/Program:help
 ```
-## Update version
+## Update HOPYBOX
 Enter in the `HOPYBOX` console:
 ```sh
 HOPYBOX/Program:update
