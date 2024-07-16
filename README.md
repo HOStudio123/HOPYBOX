@@ -28,7 +28,7 @@ See built-in help in the program
 ```sh
 HOPYBOX/Program:help
 ```
-## Update HOPYBOX
+## Update
 Enter in the `HOPYBOX` console:
 ```sh
 HOPYBOX/Program:update
@@ -40,6 +40,9 @@ $ pip install -U hopybox
 ## License
 Copyright © 2022-2024 HOStudio123, All Rights Reserved.
 `HOPYBOX` is released under  GPL-3.0 license.
+
 ## Docs
-The HOPYBOX documentation can give you detailed more instructions on how to use it.  
-[HOPYBOX Docs](https://hopybox.readthedocs.io)
+The [HOPYBOX Documentation](https://hopybox.readthedocs.io) can give you detailed more instructions on how to use it.  
+
+## Stargazers over time
+[![Stargazers over time](https://starchart.cc/HOStudio123/HOPYBOX.svg?variant=adaptive)](https://starchart.cc/HOStudio123/HOPYBOX)
