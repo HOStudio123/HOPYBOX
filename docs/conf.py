@@ -16,7 +16,7 @@ extensions = [
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
-html_theme = 'default'
+html_theme = 'custom'
 html_static_path = ['_static']
 html_theme_options = {
 }
@@ -31,8 +31,6 @@ intersphinx_mapping = {'python': ('https://docs.python.org/3', None)}
 
 napoleon_google_docstring = True
 napoleon_numpy_docstring = False
-
-html_static_path = ['_static']
 
 def setup(app):
     app.add_css_file('custom.css')
