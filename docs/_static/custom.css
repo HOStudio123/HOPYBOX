@@ -1,0 +1,20 @@
+/* custom.css */
+
+/* 去除页面边框 */
+.wy-nav-content,
+.wy-nav-side {
+    border: none !important;
+}
+
+/* 如果需要进一步美化，可以添加更多自定义样式 */
+body {
+    background-color: #f7f7f7; /* 修改背景色 */
+}
+
+.wy-nav-side {
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* 添加阴影 */
+}
+
+.wy-nav-content-wrap {
+    padding: 20px; /* 增加内容的内边距 */
+}
