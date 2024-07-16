@@ -2,7 +2,6 @@ import re
 from requests import get
 from bs4 import BeautifulSoup
 
-
 def langdet(text):
     pat_en = re.compile(r"^[a-zA-Z]+$")
     pat_cn = re.compile(r"^[\u4e00-\u9fff]+$")

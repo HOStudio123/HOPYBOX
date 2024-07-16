@@ -40,4 +40,4 @@ $ pip install -U hopybox
 ## License
 Copyright © 2022-2024 HOStudio123, All Rights Reserved.
 
-HOPYBOX is released under GPLv3 License.
+HOPYBOX is released under  GPL-3.0 license.
