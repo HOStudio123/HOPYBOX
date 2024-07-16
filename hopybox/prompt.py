@@ -7,17 +7,13 @@ def error_cross_simple(text):  # cross
 
 
 def ask_proceed(question):  # question
-    answer = input(
-        f"\033[92m➤ \033[96m {question} , Do you want to proceed ? (Y/n) \033[0m"
-    )
+    answer = input(f"\033[92m➤ \033[96m {question} , Do you want to proceed ? (Y/n) \033[0m")
     if answer in ["Y", "y", ""]:
         return True
     elif answer in ["N", "n"]:
         return False
     else:
-        print(
-            f"\033[31m✗ Your response('{answer}') was not one of the expected responses: y, n\033[0m"
-        )
+        print(f"\033[31m✗ Your response('{answer}') was not one of the expected responses: y, n\033[0m")
         return None
 
 

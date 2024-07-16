@@ -184,9 +184,7 @@ class Filetool:
         print(f"\033[92mPath \033[0m\033[95m{self.abspath}\033[0m")
         print(f"\033[92mLanguage \033[0m\033[95m{self.lang}\033[0m")
         print(f"\033[92mEncoding \033[0m\033[95m{self.encoding}\033[0m")
-        print(
-            f"\033[92mPermission \033[0m\033[95m{self.permission_string} ({self.permission_code})\033[0m"
-        )
+        print(f"\033[92mPermission \033[0m\033[95m{self.permission_string} ({self.permission_code})\033[0m")
         print(f"\033[92mSize \033[0m\033[95m{self.size}\033[0m")
         print(f"\033[92mAccess time \033[0m\033[95m{self.a_time}\033[0m")
         print(f"\033[92mModification time \033[0m\033[95m{self.m_time}\033[0m")
@@ -238,17 +236,11 @@ class Filetool:
 
     @property
     def lang(self):
-        return (
-            language_types[self.extension] if self.extension in language_types else None
-        )
+        return language_types[self.extension] if self.extension in language_types else None
 
     @property
     def b_time(self):
-        return (
-            f_time(os.path.getctime(self.path))
-            if os.name == "nt"
-            else "(No permission)"
-        )
+        return f_time(os.path.getctime(self.path)) if os.name == "nt" else "(No permission)"
 
     @property
     def m_time(self):
@@ -287,21 +279,16 @@ class Filetool:
     @property
     def permission_string(self):
         permissions = os.stat(self.path).st_mode
-        owner_permissions = "".join(
-            ["rwx"[i] if permissions >> (8 - i) & 0b001 else "-" for i in range(3)]
-        )
-        group_permissions = "".join(
-            ["rwx"[i] if permissions >> (5 - i) & 0b001 else "---"[i] for i in range(3)]
-        )
-        other_permissions = "".join(
-            ["rwx"[i] if permissions >> (2 - i) & 0b001 else "---"[i] for i in range(3)]
-        )
+        owner_permissions = "".join(["rwx"[i] if permissions >> (8 - i) & 0b001 else "-" for i in range(3)])
+        group_permissions = "".join(["rwx"[i] if permissions >> (5 - i) & 0b001 else "---"[i] for i in range(3)])
+        other_permissions = "".join(["rwx"[i] if permissions >> (2 - i) & 0b001 else "---"[i] for i in range(3)])
         return owner_permissions + group_permissions + other_permissions
 
+default = os.path.join(os.path.expanduser("~"),".config","hopybox")
 
 class Bin_system:
-    def __init__(self, path=None):
-        self.home_path = os.path.join(os.path.expanduser("~"), ".hopybox")
+    def __init__(self,path=None,home=default):
+        self.home_path = home
         self.record_path = os.path.join(self.home_path, "bin.json")
         self.bin_path = os.path.join(
             os.path.expanduser("~"), ".hopybox", ".File_Recycle"

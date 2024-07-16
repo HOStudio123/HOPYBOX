@@ -18,7 +18,7 @@ from .prompt import error_cross_simple
 
 from .timetool import timetool
 
-default = os.path.join(os.path.expanduser("~"), ".hopybox")
+default = os.path.join(os.path.expanduser("~"),".config","hopybox")
 
 
 class Cipher:
@@ -74,9 +74,7 @@ class Two_factor:
             self.cur = self.con.cursor()
 
     def add(self, data):
-        self.cur.execute(
-            "INSERT INTO TF (time,server,account,key) VALUES (?,?,?,?)", data
-        )
+        self.cur.execute("INSERT INTO TF (time,server,account,key) VALUES (?,?,?,?)", data)
         self.con.commit()
         del data
 
@@ -98,19 +96,19 @@ class Two_factor:
             return pickle.load(f)
 
     def pin_verify(self, pin):
-        return hmac.compare_digest(cipher(pin).en_sha256, self.pin_load)
+        return hmac.compare_digest(cipher(pin).en_sha512, self.pin_load)
 
     @property
     def _set_pin(self):
         if not os.path.isfile(self.dat_path):
-            pin = getpass("Please set the PIN code (at least 6 digits)\n", "green")
-            if len(pin) >= 6:
-                self.pin_set(cipher(pin).en_sha256)
-                tip_tick(
-                    "Succeeded in setting the PIN code, please remember this PIN code well, which cannot be reset"
-                )
-            else:
-                error_cross_simple("This is an unreasonable input")
+            while True:
+                pin = getpass("Please set the PIN code (at least 6 digits)\n", "green")
+                if len(pin) >= 6:
+                    self.pin_set(cipher(pin).en_sha512)
+                    tip_tick("Succeeded in setting the PIN code, please remember this PIN code well, which cannot be reset")
+                    break
+                else:
+                    error_cross_simple("This is an unreasonable input")
         else:
             error_cross_simple("You already set it up")
 
@@ -122,7 +120,7 @@ class Two_factor:
     @property
     def _add_factor(self):
         if not os.path.isfile(self.dat_path):
-            self._set_pin()
+            self._set_pin
         server = input("\033[95mServes Name\n\033[0m")
         account = input("\033[95mAccount name\n\033[0m")
         timestamp = int(time.time())
@@ -165,18 +163,12 @@ class Two_factor:
             for j in data:
                 i += 1
                 c_time = timetool.ymd_hms_format(j[0])
-                print(
-                    f"\033[96m[{i}] \033[95m[{c_time}] \033[92m[{j[1]}] \033[94m({j[2]})\033[0m"
-                )
+                print(f"\033[96m[{i}] \033[95m[{c_time}] \033[92m[{j[1]}] \033[94m({j[2]})\033[0m")
                 link.append(j[0])
-            line = int(
-                input("\033[97mWhich two-factor do you want to delete ? \033[0m")
-            )
+            line = int(input("\033[97mWhich two-factor do you want to delete ? \033[0m"))
             if 0 < line <= len(data):
                 while True:
-                    result = ask_proceed(
-                        "Do you really want to permanently delete this two-factor ?"
-                    )
+                    result = ask_proceed("Do you really want to permanently delete this two-factor ?")
                     if result == True:
                         self.delete(link[i - 1])
                         tip_tick("Successfully deleted the two-factor")
