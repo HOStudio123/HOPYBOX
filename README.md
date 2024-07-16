@@ -2,7 +2,7 @@
 ## Introduction
 An open-source and practical command box, it was made in python language, so I named it `HOPYBOX`.
 ## Installion
-Install with `pip` or your favorite PyPI package manager.
+- Install with `pip` or your favorite PyPI package manager.
 ```sh
 $ python -m pip install hopybox
 ```
@@ -39,5 +39,7 @@ $ pip install -U hopybox
 ```
 ## License
 Copyright © 2022-2024 HOStudio123, All Rights Reserved.
-
 `HOPYBOX` is released under  GPL-3.0 license.
+## Docs
+The HOPYBOX documentation can give you detailed more instructions on how to use it.  
+[HOPYBOX Docs](https://hopybox.readthedocs.io)
