@@ -3,26 +3,27 @@
 # -*- coding:utf-8 -*-
 
 '''
-Copyright (c) 2022-2024 HOStudio123(ChenJinlin).
+Copyright (c) 2022-2024 HOStudio123.
 All Rights Reserved.
 '''
 
 import os, re
-
-# color support
-if os.name == 'nt':
-    os.system('')
+import subprocess
 
 # make data dir
 os.makedirs(os.path.join(os.path.expanduser('~'),'.config','hopybox','.File_Recycle'),exist_ok=True)
 
 from rich.console import Console
 
-with Console().status('\033[96mLoading resources …\033[0m'):
+console = Console()
+
+with console.status('[bright_cyan]Loading resources …[/bright_cyan]'):
     # prompt_toolkit library
-    from prompt_toolkit import PromptSession
     from prompt_toolkit.styles import Style
+    from prompt_toolkit import PromptSession
     from prompt_toolkit.completion import NestedCompleter
+    from prompt_toolkit.formatted_text import FormattedText
+    from prompt_toolkit import print_formatted_text as print
     from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
     # getpass library
@@ -57,8 +58,7 @@ with Console().status('\033[96mLoading resources …\033[0m'):
     from .command import command_data_add
 
     # update library
-    from .update import update_log_get
-    from .update import update_log_content
+    from .update import update_log_format
     from .update import update_program
 
     # calculate library
@@ -95,12 +95,12 @@ with Console().status('\033[96mLoading resources …\033[0m'):
     _windows = 0
     
     # version
-    _version_code = '1.9.6'
+    _version_code = '1.9.8'
+    _version_number = int(''.join(_version_code.split('.')))
     _version_type = 'default'
-    _version_all = f'\033[95m* HOPYBOX Version {_version_code}\n* Python Version {python_version()}'
-    
-    # update time
-    _update_time = '06:30:00'
+    _version_info = f'\033[95m* HOPYBOX Version {_version_code}\n* Python Version {python_version()}'
+    _version_update_content = '* Fixed some known issues\n* Add some new commands'
+    _version_update_time = 'Jul 17 2024 10:05:00'
     
     # command
     command_data_add()
@@ -119,12 +119,6 @@ with Console().status('\033[96mLoading resources …\033[0m'):
 
 This is an open-source and practical command box.                
   '''
-  
-    # hopybox update log
-    update_log_dict = dict()
-    update_log_dict['all'] = None
-    for i in update_log_content:
-        update_log_dict[i] = None
 
 # command prompt list
 def help_list_update():
@@ -140,7 +134,7 @@ def terminal(command):
 
 def clear():
     print('\033c', end='')
-    terminal('cls' if os.name == 'nt' else 'clear')
+    subprocess.run('cls' if os.name == 'nt' else 'clear', shell=True)
 
 # switch mode
 def _switch(mode):
@@ -160,19 +154,19 @@ class NotFoundCommandError(Exception):
 
 
 # command process
-def _process(command):
+def _process(command:str) -> list:
     split_list = command.split()
     if len(split_list) <= 2:
-        return command.split()
+        return command.split() # list
     command = split_list[0]
     parameter = split_list[1]
     if parameter[0] == '-':
         content = split_list[2:]
         if len(content) == 1:
             content = content[0]
-        return [command, parameter, content]
+        return [command, parameter, content] # list
     content = split_list[1:]
-    return [command, content]
+    return [command, content] # list
 
 
 # interpreter
@@ -218,7 +212,7 @@ def _format_command():
     command_dict = dict()
     for i in command_data[_mode]:
         if type(command_data[_mode][i]['code']) == str:
-            command_dict[i] = update_log_dict if i == 'uplog' else None
+            command_dict[i] = None
         else:
             par_set = set()
             [par_set.add(j) for j in command_data[_mode][i]['code']]
@@ -246,7 +240,18 @@ def start():
     mouse_support = False
     times = 0
     # start text
-    print(f"\033[96mWELCOME TO HOPYBOX\n\033[0m\033[92m[USER:{getuser()}] [RUN:{timetool.hms}]\033[0m\nHOPYBOX {_version_code} ({_version_type}, {update_log_content[_version_code]['date']}, {_update_time})\n[Python {python_version()}] on {system()}\nType \"help\" , \"copyright\" , \"version\" ,\"feedback\" or \"license\" for more information")
+    text = FormattedText([
+    ('class:title', 'WELCOME TO HOPYBOX'),
+    ('', '\n'),
+    ('class:head', f'[USER:{getuser()}] [RUN:{timetool.hms}]'),
+    ('', '\n'),
+    ('class:body', f"HOPYBOX {_version_code} ({_version_type}, {' '.join(_version_update_time.split()[:3])}, {_version_update_time.split()[3]})\n[Python {python_version()}] on {system()}\nType \"help\" , \"copyright\" , \"version\" ,\"feedback\" or \"license\" for more information")
+    ])
+    style = Style.from_dict({
+    'title': '#00ffff',
+    'head': '#00ff00',
+    })
+    print(text,style=style)
     style = Style.from_dict({'prompt': 'yellow'})
     completer = NestedCompleter.from_nested_dict(_format_command())
     session = PromptSession(style=style)
@@ -261,7 +266,7 @@ def start():
             if times % 2 != 0:
                 mouse_support = True
                 tip_tick('Successfully turned on mouse mode')
-            else:
+            else: # 待修改
                 mouse_support = False
                 tip_tick('Successfully turned off mouse mode')
             continue
@@ -269,6 +274,5 @@ def start():
         run(_command)
 
 
-# python -m hopybox
 if __name__ == '__main__':
     start()

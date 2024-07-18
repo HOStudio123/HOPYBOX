@@ -15,10 +15,12 @@ from .prompt import getpass
 from .prompt import tip_tick
 from .prompt import ask_proceed
 from .prompt import error_cross_simple
+from .prompt import color_print
+from .prompt import color_input
 
 from .timetool import timetool
 
-default = os.path.join(os.path.expanduser("~"),".config","hopybox")
+default = os.path.join(os.path.expanduser('~'),'.config','hopybox')
 
 
 class Cipher:
@@ -27,20 +29,20 @@ class Cipher:
 
     @property
     def en_sha256(self):
-        h = hashlib.new("sha256")
-        h.update(bytes(self.message, encoding="utf-8"))
+        h = hashlib.new('sha256')
+        h.update(bytes(self.message, encoding='utf-8'))
         return h.hexdigest()
 
     @property
     def en_sha512(self):
-        h = hashlib.new("sha512")
-        h.update(bytes(self.message, encoding="utf-8"))
+        h = hashlib.new('sha512')
+        h.update(bytes(self.message, encoding='utf-8'))
         return h.hexdigest()
 
     @property
     def en_md5(self):
-        h = hashlib.new("md5")
-        h.update(bytes(self.message, encoding="utf-8"))
+        h = hashlib.new('md5')
+        h.update(bytes(self.message, encoding='utf-8'))
         return h.hexdigest()
 
     @property
@@ -51,48 +53,44 @@ class Cipher:
 
     def en_fernet(self, key):
         fer = fernet(key)
-        return fer.encrypt(self.message.encode()).decode("utf-8")
+        return fer.encrypt(self.message.encode()).decode('utf-8')
 
     def de_fernet(self, key):
         fer = fernet(key)
-        return fer.decrypt(self.message.encode()).decode("utf-8")
-
+        return fer.decrypt(self.message.encode()).decode('utf-8')
+        
 
 cipher = Cipher
 
 
 class Two_factor:
     def __init__(self, path=default):
-        self.db_path = os.path.join(default, "two_factor.db")
-        self.dat_path = os.path.join(default, "two_factor.dat")
-        if not os.path.exists(self.db_path):
-            self.con = sqlite3.connect(self.db_path)
-            self.cur = self.con.cursor()
-            self.cur.execute("CREATE TABLE TF (time,server,account,key)")
-        else:
-            self.con = sqlite3.connect(self.db_path)
-            self.cur = self.con.cursor()
+        self.db_path = os.path.join(default, 'two_factor.db')
+        self.dat_path = os.path.join(default, 'two_factor.dat')
+        self.con = sqlite3.connect(self.db_path)
+        self.cur = self.con.cursor()
+        self.cur.execute('CREATE TABLE IF NOT EXISTS TF (time,server,account,key)')
 
     def add(self, data):
-        self.cur.execute("INSERT INTO TF (time,server,account,key) VALUES (?,?,?,?)", data)
+        self.cur.execute('INSERT INTO TF (time,server,account,key) VALUES (?,?,?,?)', data)
         self.con.commit()
         del data
 
     @property
     def load(self):
-        return self.cur.execute("SELECT * FROM TF").fetchall()
+        return self.cur.execute('SELECT * FROM TF').fetchall()
 
     def delete(self, data):
-        self.cur.execute("DELETE FROM TF WHERE time = '(?)'")
+        self.cur.execute(f'DELETE FROM TF WHERE time = {data}')
         self.con.commit()
 
     def pin_set(self, value):
-        with open(self.dat_path, "wb") as f:
+        with open(self.dat_path, 'wb') as f:
             pickle.dump(value, f)
 
     @property
     def pin_load(self):
-        with open(self.dat_path, "rb") as f:
+        with open(self.dat_path, 'rb') as f:
             return pickle.load(f)
 
     def pin_verify(self, pin):
@@ -102,37 +100,47 @@ class Two_factor:
     def _set_pin(self):
         if not os.path.isfile(self.dat_path):
             while True:
-                pin = getpass("Please set the PIN code (at least 6 digits)\n", "green")
+                pin = getpass('Please set the PIN code (at least 6 digits)\n','#00FF00')
                 if len(pin) >= 6:
                     self.pin_set(cipher(pin).en_sha512)
-                    tip_tick("Succeeded in setting the PIN code, please remember this PIN code well, which cannot be reset")
+                    tip_tick('Succeeded in setting the PIN code, please remember this PIN code well, which cannot be reset')
                     break
                 else:
-                    error_cross_simple("This is an unreasonable input")
+                    error_cross_simple('This is an unreasonable input')
         else:
-            error_cross_simple("You already set it up")
+            error_cross_simple('You already set it up')
 
     @property
     def _verify_pin(self):
-        pin = getpass("Please enter the PIN code\n", "green")
+        pin = getpass('Please enter the PIN code\n','#00FF00')
         return self.pin_verify(pin)
 
     @property
     def _add_factor(self):
         if not os.path.isfile(self.dat_path):
             self._set_pin
-        server = input("\033[95mServes Name\n\033[0m")
-        account = input("\033[95mAccount name\n\033[0m")
+        server = color_input('Serves Name\n','#FF00FF')
+        account = color_input('Account name\n','#FF00FF')
         timestamp = int(time.time())
-        key = cipher(self.pin_load).en_base64
-        token = cipher(getpass("Secret Key\n", "green")).en_fernet(key)
-        del key
-        data = (timestamp, server, account, token)
-        self.add(data)
-        tip_tick("Succeeded in setting the two-factor")
+        token = self.otp_verify(getpass('Secret Key\n','#00FF00'), cipher(self.pin_load).en_base64)
+        if token:
+            data = (timestamp, server, account, token)
+            self.add(data)
+            tip_tick('Succeeded in setting the two-factor')
+        else:
+            error_cross_simple('This is an unreasonable input')
 
     def otp_pro(self, secret):
         return pyotp.TOTP(secret).now()
+    
+    def otp_verify(self, secret, key):
+        try:
+            self.otp_pro(secret)
+            token = cipher(secret).en_fernet(key)
+            del secret,key
+            return token
+        except:
+            return None
 
     @property
     def _output(self):
@@ -146,11 +154,11 @@ class Two_factor:
                     otp = self.otp_pro(cipher(i[3]).de_fernet(key))
                     del key
                 except Exception:
-                    otp = "(Worng Formatting)"
+                    otp = '(Worng Formatting)'
                 finally:
-                    print(f"\033[92m[{i[1]}] \033[94m({i[2]}) \033[97m{otp}")
+                    print(f'\033[92m[{i[1]}] \033[94m({i[2]}) \033[97m{otp}')
         else:
-            error_cross_simple("The entered PIN code is incorrect")
+            error_cross_simple('The entered PIN code is incorrect')
 
     @property
     def _delete(self):
@@ -163,22 +171,31 @@ class Two_factor:
             for j in data:
                 i += 1
                 c_time = timetool.ymd_hms_format(j[0])
-                print(f"\033[96m[{i}] \033[95m[{c_time}] \033[92m[{j[1]}] \033[94m({j[2]})\033[0m")
+                text = [
+                ('class:line',f'[{i}]'),
+                ('',' '),
+                ('class:time',f'[{c_time}]'),
+                ('',' '),
+                ('class:server',f'[{j[1]}]'),
+                ('',' '),
+                ('class:account',f'({j[2]})')
+                ]
+                style = {
+                'line':'#00FFFF',
+                'time':'#FF00FF',
+                'server':'#00FF00',
+                'account':'#5C5CFF'
+                }
+                color_print(text,style,single=False)
                 link.append(j[0])
-            line = int(input("\033[97mWhich two-factor do you want to delete ? \033[0m"))
+            line = int(color_input('Which two-factor do you want to delete ? ','#FFFFFF'))
             if 0 < line <= len(data):
-                while True:
-                    result = ask_proceed("Do you really want to permanently delete this two-factor ?")
-                    if result == True:
-                        self.delete(link[i - 1])
-                        tip_tick("Successfully deleted the two-factor")
-                        break
-                    elif result == None:
-                        continue
-                    else:
-                        break
+                result = ask_proceed('Do you really want to permanently delete this two-factor ?')
+                if result:
+                    self.delete(link[line-1])
+                    tip_tick('Successfully deleted the two-factor')
             else:
-                error_cross_simple("This is an unreasonable input")
+                error_cross_simple('This is an unreasonable input')
 
 
 two_factor = Two_factor()
