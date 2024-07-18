@@ -1,30 +1,71 @@
 from prompt_toolkit import prompt
 from prompt_toolkit.styles import Style
+from prompt_toolkit.formatted_text import FormattedText
+from prompt_toolkit import print_formatted_text as print
 
-
-def error_cross_simple(text):  # cross
-    print(f"\033[91m✗ Oops! {text}\033[0m")
-
-
-def ask_proceed(question):  # question
-    answer = input(f"\033[92m➤ \033[96m {question} , Do you want to proceed ? (Y/n) \033[0m")
+def ask_proceed(question:str):  
+    # question prompt
+    text = [
+    ('class:arrow', '➤'),
+    ('', ' '),
+    ('class:text',f'{question}, Do you want to proceed ? (Y/n) ')
+    ]
+    style = {
+    'arrow': '#00FF00',
+    'text': '#00FFFF',
+    }
+    answer = color_input(text,style,single=False)
     if answer in ["Y", "y", ""]:
         return True
     elif answer in ["N", "n"]:
         return False
     else:
-        print(f"\033[31m✗ Your response('{answer}') was not one of the expected responses: y, n\033[0m")
-        return None
+        color_print(f"✗ Your response('{answer}') was not one of the expected responses: y, n",'#CD0000')
+        ask_proceed(question)
 
+def error_cross(error,mode,text:str,value):
+    # error output
+    color_print(f"✗ {error} in {mode}: \n '{value}' -> {text}",'#FF0000')
+    
+def error_cross_simple(text:str):
+    # more pure error output
+    color_print(f'✗ Oops! {text}','#FF0000')
 
-def error_cross(error, mode, text, value):  # cross
-    print(f"\033[91m✗ {error} in {mode}: \n '{value}' -> {text}\033[0m")
+def tip_tick(text:str):
+    # tick prompt
+    text = [
+    ('class:tick', '✓'),
+    ('', ' '),
+    ('class:text',text)
+    ]
+    style = {
+    'tick': '#00FF00',
+    'text': '#00FFFF'
+    }
+    color_print(text,style,single=False)
 
+def getpass(text:str,color:str):
+    # password protection for input
+    style = Style.from_dict({'prompt':color})
+    return prompt(text,is_password=True,style=style)
+    
+def color_input(text,color,single=True):
+    # beautifying input
+    if single:
+        style = Style.from_dict({'prompt':color})
+        return prompt(text,style=style)
+    else:
+        text = FormattedText(text)
+        style = Style.from_dict(color)
+        return prompt(text,style=style)
 
-def tip_tick(text):  # tick
-    print(f"\033[92m✓ \033[96m {text}\033[0m")
-
-
-def getpass(text, color):  # password
-    style = Style.from_dict({"prompt": color})
-    return prompt(text, is_password=True, style=style)
+def color_print(text,color,single=True):
+    if single:
+        # beautifying output
+        text = FormattedText([('class:text',text)])
+        style = Style.from_dict({'text':color})
+        print(text,style=style)
+    else:
+        text = FormattedText(text)
+        style = Style.from_dict(color)
+        print(text,style=style)
