@@ -266,7 +266,7 @@ def start():
             if times % 2 != 0:
                 mouse_support = True
                 tip_tick('Successfully turned on mouse mode')
-            else: 
+            else: # 待修改
                 mouse_support = False
                 tip_tick('Successfully turned off mouse mode')
             continue
@@ -274,5 +274,6 @@ def start():
         run(_command)
 
 
+# python -m hopybox
 if __name__ == '__main__':
     start()
