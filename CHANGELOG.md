@@ -12,9 +12,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added some new commands
 
-### Added
-- Added some new commands
-
 ## [1.9.5] - 2024-07-15
 ### Fixed
 - Fixed some known issues
