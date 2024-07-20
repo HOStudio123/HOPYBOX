@@ -9,6 +9,8 @@ from email.mime.multipart import MIMEMultipart
 from .prompt import getpass
 from .prompt import tip_tick
 from .prompt import error_cross
+from .prompt import color_print
+from .prompt import color_input
 
 
 def email_send_pro_system(user, password, host, to, subject, body, attachments):
@@ -16,7 +18,7 @@ def email_send_pro_system(user, password, host, to, subject, body, attachments):
     msg['From'] = user
     msg['To'] = to
     msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'plain'))
+    msg.attach(MIMEText(body,'plain'))
     if attachments:
         attachment = open(attachments, 'rb')
         part = MIMEBase('application', 'octet-stream')

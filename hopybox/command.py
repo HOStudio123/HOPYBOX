@@ -28,12 +28,11 @@ def command_data_add():
     Key = [
     ("Ctrl+C",None,'^C',"Continue the conversation"),
     ("Ctrl+D",None,'^D',"Exit the program")
-    
     ]
     
     # Global
     Global = [
-    ("help","command_help()",'help [command]','Type "help [command]" for help about this command or "help" for help about all commands'),
+    ("help","command_help()",'help [command]','To get the help about all commands'),
     
     ("switch","_switch(command_data['Global']['switch']['run'])","switch [program|device|file|calculate]","To switch running mode"),
     
@@ -44,17 +43,29 @@ def command_data_add():
     
     # Program
     Program = [
+    ("hopybox","color_print(hopybox_artword,'#00FFFF')","hopybox","To get the wordart of hopybox"),
+    
     ("hoget","hoget.main(command_data['Program']['hoget']['run'])","hoget [URL]","To access website addresses"),
     
     ("browser","browser(command_data['Program']['browser']['run'])","browser [URL]","Initiate your browser and visit url"),
     
-    ("uplog","update_log_content(command_data['Program']['uplog']['run'])","uplog [version]","To get a update log about the latest version"),
+    ("coral","coral._chat","coral","Chat with Coral"),
+    
+    ("color","color(command_data['Program']['color']['run'])","color [#(code)]","Returns the color represented by the color code"),
+    
+    ("uplog","update_log_format(_version_code,_version_update_time,_version_update_content)","uplog [version]","To get a update log about the latest version"),
+    
+    ("version","color_print(_version_info,'#FF00FF')","version","Learn about program version"),
+    
+    ("copyright","print(__copyright__)","copyright","Learn about program copyright"),
+    
+    ("author","print(__author__)","author","Learn about program developer name"),
  
     ("author","print(__author__)","author","Learn about program developer name"),
     
-    ("feedback","print(f'\033[96mIf you have any questions or suggestions, please contact the developer as\033[0m \033[4;95m{__email__}')","feedback","To get the way of feedback"),
+    ("feedback","color_print(f'If you have any questions or suggestions, please contact the developer as {__email__}','#00FFFF',html=True)","feedback","To get the way of feedback"),
     
-    ("update", "update_program()", "update", "To update the version"),
+    ("update", "update_program(_version_number)", "update", "To update the version"),
     
     ("license", "print(license())", "license", "To view the license"),
     
@@ -98,11 +109,7 @@ def command_data_add():
                                              }
     ),
 
-    ("download","download(command_data['Program']['download']['run'])","download [URL]","Download website resources"),
-    
-    ("hopybox","print(hopybox_artword)","hopybox","To get the wordart of hopybox"),
-    
-    ("timestamp","print(time.time())","timestamp","To get the device timestamp")
+    ("download","download(command_data['Program']['download']['run'])","download [URL]","Download website resources")
     ]
     
     # Device
@@ -122,6 +129,8 @@ def command_data_add():
     ("network","print(device.Web().network())","network","To get the name of device network"),
 
     ("hostname","print(device.Web().hostname())","hostname","To get the device hostname"),
+    
+    ("timestamp","print(device.Time().timestamp())","timestamp","To get the device timestamp"),
     
     ("time","print(device.Time().time_local())","time","To get the local time"),
     
@@ -223,7 +232,7 @@ def command_data_add():
     File = [
     ("workdir", "print(os.getcwd())", "workdir", "To get the work path"),
     
-    ("home", "print(os.path.expanduser('~'))","workdir","To get the home path"),
+    ("home", "print(os.path.expanduser('•'))","workdir","To get the home path"),
     
     ("tree","tree(command_data['File']['tree']['run'])", "tree {dir}","Drawing the file tree directory"),
     
@@ -289,7 +298,7 @@ def command_help(mode=None,command=None):
                 text = [
                 ('class:head','* Usage'),
                 ('','\n'),
-                ('class:body',f"~ {command_data[_mode][_command]['help']['operate']}")
+                ('class:body',f"• {command_data[_mode][_command]['help']['operate']}")
                 ]
                 style = {
                 'head':'#FF00FF',
@@ -298,10 +307,10 @@ def command_help(mode=None,command=None):
                 if type(command_data[_mode][_command]['help']['details']) == dict:
                     color_print('* Options','#5C5CFF')
                     for item in command_data[_mode][_command]['help']['details']:
-                        print('~',item,command_data[_mode][_command]['help']['details'][item])
+                        print('•',item,command_data[_mode][_command]['help']['details'][item])
                 else:
                     color_print('* Detail','#5C5CFF')
-                    print('~',command_data[_mode][_command]['help']['details'])
+                    print('•',command_data[_mode][_command]['help']['details'])
                 if i < len(command_data[_mode]):
                     print('-'*60)
     elif mode and not command:
@@ -311,7 +320,7 @@ def command_help(mode=None,command=None):
             text = [
             ('class:head','* Usage'),
             ('','\n'),
-            ('class:body',f"~ {command_data[_mode][_command]['help']['operate']}")
+            ('class:body',f"• {command_data[_mode][_command]['help']['operate']}")
             ]
             style = {
             'head':'#FF00FF',
@@ -320,10 +329,18 @@ def command_help(mode=None,command=None):
             if type(command_data[_mode][_command]['help']['details']) == dict:
                 color_print('* Options','#5C5CFF')
                 for item in command_data[_mode][_command]['help']['details']:
-                        print('~',item,command_data[_mode][_command]['help']['details'][item])
+                        print('•',item,command_data[_mode][_command]['help']['details'][item])
             else:
                 color_print('* Detail','#5C5CFF')
-                print('~',command_data[_mode][_command]['help']['details'])
+                print('•',command_data[_mode][_command]['help']['details'])
             if i < len(command_data[_mode]):
                 print('-'*60)
+    else:
+        if type(command_data[_mode][_command]['help']['details']) == dict:
+            color_print('* Options','#5C5CFF')
+            for item in command_data[_mode][_command]['help']['details']:
+                print('•',item,command_data[_mode][_command]['help']['details'][item])
+        else:
+            color_print('* Detail','#5C5CFF')
+            print('•',command_data[_mode][_command]['help']['details'])        
 

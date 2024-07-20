@@ -1,5 +1,6 @@
 from prompt_toolkit import prompt
 from prompt_toolkit.styles import Style
+from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit import print_formatted_text as print
 
@@ -44,28 +45,32 @@ def tip_tick(text:str):
     }
     color_print(text,style,single=False)
 
-def getpass(text:str,color:str):
+def getpass(text:str,color:str,html=False):
     # password protection for input
     style = Style.from_dict({'prompt':color})
-    return prompt(text,is_password=True,style=style)
+    if html:
+        return prompt(HTML(text),is_password=True,style=style)
+    else:
+        return prompt(text,is_password=True,style=style)
     
-def color_input(text,color,single=True):
+def color_input(text,color,single=True,html=False):
     # beautifying input
     if single:
         style = Style.from_dict({'prompt':color})
-        return prompt(text,style=style)
     else:
         text = FormattedText(text)
         style = Style.from_dict(color)
+    if html:
+        return prompt(HTML(text),style=style)
+    else:
         return prompt(text,style=style)
-
+        
 def color_print(text,color,single=True):
+    # beautifying output
     if single:
-        # beautifying output
         text = FormattedText([('class:text',text)])
         style = Style.from_dict({'text':color})
-        print(text,style=style)
     else:
         text = FormattedText(text)
         style = Style.from_dict(color)
-        print(text,style=style)
+    print(text,style=style)

@@ -41,7 +41,7 @@ class Hoget:
             with Console().status('\033[96mLoading information …'):
                 cache = res.content
                 print(
-                    f'\033[32mWebsite Size\033[0m\033[95m\n{self._format_size(len(cache))}'
+                    f'\033[32mWeb Page Size\033[0m\033[95m\n{self._format_size(len(cache))}'
                 )
                 print('\033[32mHeaders\033[0m\033[95m')
                 for name, value in res.headers.items():

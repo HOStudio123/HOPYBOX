@@ -14,7 +14,7 @@ def update_log_format(version,date,content):
 
 def update_program(version_number):
     try:
-        with console.status('\033[96mChecking in version …\033[0m'):
+        with console.status('[bright_cyan]Checking in version …[/bright_cyan]'):
             res = requests.get('https://hopybox.github.io/version')
         if version_number >= int(res.text):
             tip_tick('It is already the latest version')
