@@ -22,8 +22,6 @@ with console.status('[bright_cyan]Loading resources …[/bright_cyan]'):
     from prompt_toolkit.styles import Style
     from prompt_toolkit import PromptSession
     from prompt_toolkit.completion import NestedCompleter
-    from prompt_toolkit.formatted_text import FormattedText
-    from prompt_toolkit import print_formatted_text as print
     from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
     # getpass library
@@ -37,8 +35,9 @@ with console.status('[bright_cyan]Loading resources …[/bright_cyan]'):
     from .device import device
 
     # prompt library
-    from .prompt import error_cross
     from .prompt import tip_tick
+    from .prompt import error_cross
+    from .prompt import color_print
 
     # connect library
     from .connect import hoget
@@ -80,12 +79,15 @@ with console.status('[bright_cyan]Loading resources …[/bright_cyan]'):
     # cipher library
     from .cipher import cipher
     from .cipher import two_factor
+    
+    # ai library
+    from .ai import coral
 
     # some information of hopybox
     __author__ = 'HOStudio123'
     __email__ = 'hostudio.hopybox@foxmail.com'
     __license__ = 'GPL-3.0 license'
-    __copyright__ = 'Copyright (c) 2022-2024 HOStudio123.\nAll Rights Reserved.'
+    __copyright__ = 'Copyright (c) 2022-2024 HOStudio123'
     
     # mode
     _mode_type = ['Program', 'Device', 'File', 'Calculate']
@@ -98,9 +100,9 @@ with console.status('[bright_cyan]Loading resources …[/bright_cyan]'):
     _version_code = '1.9.8'
     _version_number = int(''.join(_version_code.split('.')))
     _version_type = 'default'
-    _version_info = f'\033[95m* HOPYBOX Version {_version_code}\n* Python Version {python_version()}'
+    _version_info = f'* HOPYBOX Version {_version_code}\n* Python Version {python_version()}'
     _version_update_content = '* Fixed some known issues\n* Add some new commands'
-    _version_update_time = 'Jul 17 2024 10:05:00'
+    _version_update_time = 'Jul 20 2024 15:15:00'
     
     # command
     command_data_add()
@@ -127,11 +129,15 @@ def help_list_update():
     [command_prompt_list.add(j) for j in command_data['Global']]
     [command_prompt_list.add(j) for j in command_data[_mode]]
 
+# plug-in
+def color(color):
+    color_print(color,color)
 
+# plug-in
 def terminal(command):
     os.system(command)
-
-
+    
+# plug-in
 def clear():
     print('\033c', end='')
     subprocess.run('cls' if os.name == 'nt' else 'clear', shell=True)
@@ -154,20 +160,22 @@ class NotFoundCommandError(Exception):
 
 
 # command process
-def _process(command:str) -> list:
+def _process(command:str):
     split_list = command.split()
+    
     if len(split_list) <= 2:
-        return command.split() # list
+        return command.split()
     command = split_list[0]
     parameter = split_list[1]
-    if parameter[0] == '-':
+    
+    if parameter[0].startswith('-'):
         content = split_list[2:]
         if len(content) == 1:
             content = content[0]
-        return [command, parameter, content] # list
+        return [command, parameter, content]
+    
     content = split_list[1:]
-    return [command, content] # list
-
+    return [command, content]
 
 # interpreter
 def analysis(mode, command):
@@ -175,7 +183,7 @@ def analysis(mode, command):
     if len(_process(command)) == 1:
         exec(command_data[mode][_command]['code'])
     else:
-        if _process(command)[1][0] == '-':
+        if _process(command)[1].startswith('-'):
             if len(_process(command)) == 3:
                 command_data[mode][_command]['run'] = _process(command)[2]
             exec(command_data[mode][_command]['code'][_process(command)[1]])
@@ -203,7 +211,7 @@ def run(command):
         else:
             raise NotFoundCommandError
     except Exception as e:
-        error_cross(e.__class__.__name__, _mode, e, _store)
+        error_cross(e.__class__.__name__, _mode, e, _store.strip())
 
 
 # command formatting
@@ -237,21 +245,21 @@ def _format_command():
 # start
 def start():
     global _command, _store, _windows, completer
-    mouse_support = False
+    mouse_support = True if os.name == 'nt' else False
     times = 0
     # start text
-    text = FormattedText([
+    text = [
     ('class:title', 'WELCOME TO HOPYBOX'),
     ('', '\n'),
     ('class:head', f'[USER:{getuser()}] [RUN:{timetool.hms}]'),
     ('', '\n'),
     ('class:body', f"HOPYBOX {_version_code} ({_version_type}, {' '.join(_version_update_time.split()[:3])}, {_version_update_time.split()[3]})\n[Python {python_version()}] on {system()}\nType \"help\" , \"copyright\" , \"version\" ,\"feedback\" or \"license\" for more information")
-    ])
-    style = Style.from_dict({
+    ]
+    style = {
     'title': '#00ffff',
     'head': '#00ff00',
-    })
-    print(text,style=style)
+    }
+    color_print(text,style,single=False)
     style = Style.from_dict({'prompt': 'yellow'})
     completer = NestedCompleter.from_nested_dict(_format_command())
     session = PromptSession(style=style)
@@ -259,16 +267,11 @@ def start():
         _windows += 1
         try:
             _command = session.prompt(f'[{_windows}]HOPYBOX/{_mode}:',completer=completer,style=style,mouse_support=mouse_support,auto_suggest=AutoSuggestFromHistory())
+            if not _command.strip():
+                continue
         except EOFError:
             exit()
         except KeyboardInterrupt:
-            times += 1
-            if times % 2 != 0:
-                mouse_support = True
-                tip_tick('Successfully turned on mouse mode')
-            else: # 待修改
-                mouse_support = False
-                tip_tick('Successfully turned off mouse mode')
             continue
         _store = _command
         run(_command)
