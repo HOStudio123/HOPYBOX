@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.abspath('.'))
 # Project information
 project = 'HOPYBOX'
 author = 'HOStudio123'
-release = '1.9.6'
+release = '1.9.8'
 
 # General configuration
 extensions = [
