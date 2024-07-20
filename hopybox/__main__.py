@@ -193,7 +193,7 @@ def analysis(mode, command):
 
 
 def run(command):
-    global _command
+    global _com: mand
     _command = _process(command)[0] if command else ''
     try:
         if _command in command_data['Global']:
