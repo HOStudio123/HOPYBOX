@@ -150,7 +150,7 @@ def _switch(mode):
         completer = NestedCompleter.from_nested_dict(_format_command())
         tip_tick('Program mode switched successfully')
     else:
-        error_cross('SwitchError', _mode, 'The mode was not found', _store.split(' ', 1)[1])
+        error_cross('SwitchError', _mode, 'The mode was not found', _store.split(' ',1)[1])
 
 
 # exception
@@ -193,7 +193,7 @@ def analysis(mode, command):
 
 
 def run(command):
-    global _com: mand
+    global _command
     _command = _process(command)[0] if command else ''
     try:
         if _command in command_data['Global']:
@@ -244,6 +244,7 @@ def _format_command():
 
 # start
 def start():
+    os.system('')
     global _command, _store, _windows, completer
     mouse_support = True if os.name == 'nt' else False
     times = 0

@@ -101,7 +101,7 @@ def command_data_add():
     ),
     
     ("translate",{
-                   "-y": "translate.YouDao().output(translate.YouDao().trans(command_data['Program']['translate']['run'],langdet(command_data['Program']['translate']['run'])[1]))",
+                   "-y": "translate.YouDao().output(translate.YouDao().trans(' '.join(command_data['Program']['translate']['run']),langdet(' '.join(command_data['Program']['translate']['run']))[1]))",
                    "-g": "print(translate.Google().trans(command_data['Program']['translate']['run'],langdet(command_data['Program']['translate']['run'])[1]))"
                  },"translate [-(y|g) text]",{
                                                 "-y":"To translate the word into Chinese/English by YouDao",
@@ -204,8 +204,8 @@ def command_data_add():
     ("!","print(calculate.Expression().run(command_data['Calculate']['!']['run']))","! [expression]","Used by calculate"),
     
     ("dx",{
-             "-d": "print(calculate.Function(command_data['Calculate']['dx']['run'][1]).derivative(command_data['Calculate']['dx']['run'][0]))"
-          },"dx [-(d) level expression]",{
+             "-d":"print(calculate.Function(command_data['Calculate']['dx']['run'][1]).derivative(command_data['Calculate']['dx']['run'][0]))"
+          },"dx [level expression]",{
                                             "-d":"Used by differentiation"
                                          }
     ),

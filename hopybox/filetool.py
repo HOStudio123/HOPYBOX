@@ -346,9 +346,13 @@ class Bin_system:
         records_list = list()
         for item in records:
             i += 1
-            print(
-                f"\033[92m[{i}] \033[96m[{records[item][1]}] \033[97m{item} \033[94m({filetool(os.path.join(self.bin_path,item)).size})"
-            )
+            text = [
+            ('class:line',f'[{i}]'),
+            ('class:file',f'[{records[item][1]}]'),
+            ('class:item',item)
+            
+            ]
+            print(f"\033[92m[{i}] \033[96m[{records[item][1]}] \033[97m{item} \033[94m({filetool(os.path.join(self.bin_path,item)).size})")
             records_list.append([item, records[item]])
         back_path = records_list[
             int(input("\033[95mWhich file do you want to restore ? \033[0m")) - 1
