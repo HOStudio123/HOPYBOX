@@ -1,22 +1,23 @@
-# .readthedocs.yaml
+# .readthedocs.yml
 # Read the Docs configuration file
 
 # Required
 version: 2
 
-# Set the OS, Python version and other tools you might need
+# Build settings
 build:
   os: ubuntu-22.04
   tools:
     python:
       version: 3.12
       install:
-        - requirements: requirements.txt
+        - requirements: requirements.txt  # Ensure dependencies are installed
 
-
+# Sphinx settings
 sphinx:
-  configuration: docs/conf.py
+  configuration: docs/conf.py  # Path to your Sphinx configuration file
 
+# Build formats
 formats:
   - pdf
   - epub
