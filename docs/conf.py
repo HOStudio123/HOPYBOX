@@ -21,13 +21,9 @@ templates_path = ['_templates']
 exclude_patterns = []
 
 # Options for HTML output
-try:
-  import sphinx_nefertiti
-  html_theme = 'sphinx_nefertiti'
-except ImportError:
-  html_theme = 'pyramid'
-  
-  html_static_path = ['_static']
+html_theme = 'pyramid'
+
+html_static_path = ['_static']
 
 # Custom CSS
 def setup(app):
