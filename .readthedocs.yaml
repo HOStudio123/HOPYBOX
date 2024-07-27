@@ -8,8 +8,7 @@ version: 2
 build:
   os: ubuntu-22.04
   tools:
-    python:
-      version: "3.12"  # Python version as a string
+    python: "3.12"  # Specify Python version as a string
   install:
     - requirements: requirements.txt  # Ensure dependencies are installed
 
