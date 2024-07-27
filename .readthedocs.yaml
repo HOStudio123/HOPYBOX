@@ -10,7 +10,8 @@ build:
   tools:
     python: "3.12"  # Specify Python version as a string
   install:
-    - requirements: requirements.txt  # Ensure dependencies are installed
+    - pip:
+        requirements: requirements.txt  # Install dependencies from requirements.txt
 
 # Sphinx settings
 sphinx:
