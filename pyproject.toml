@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "HOPYBOX"
-version = "1.9.8"
+version = "2.0.0"
 authors = [{name = "HOStudio123",email = "hostudio.hopybox@foxmail.com"}]
 license = {text = "GPL-3.0 license"}
 description = "An open-source and practical command box."
@@ -30,6 +30,7 @@ dependencies = [
     "psutil>=5.8.0",
     "prompt_toolkit>=3.0.47,<3.10",
     "cryptography>=41.0.0",
+    "cohere"
 ]    
 
 [project.urls]

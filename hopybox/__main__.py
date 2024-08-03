@@ -48,10 +48,10 @@ with console.status('[bright_cyan]Loading resources …[/bright_cyan]'):
     from .mail import email
 
     # translate library
-    from .translate import langdet
     from .translate import translate
 
     # command library
+    from .command import command_gather
     from .command import command_help
     from .command import command_data
     from .command import command_data_add
@@ -97,12 +97,12 @@ with console.status('[bright_cyan]Loading resources …[/bright_cyan]'):
     _windows = 0
     
     # version
-    _version_code = '1.9.8'
+    _version_code = '2.0.0'
     _version_number = int(''.join(_version_code.split('.')))
     _version_type = 'default'
     _version_info = f'* HOPYBOX Version {_version_code}\n* Python Version {python_version()}'
     _version_update_content = '* Fixed some known issues\n* Add some new commands'
-    _version_update_time = 'Jul 20 2024 15:15:00'
+    _version_update_time = 'Aug 03 2024 12:03:00'
     
     # command
     command_data_add()
@@ -160,11 +160,12 @@ class NotFoundCommandError(Exception):
 
 
 # command process
-def _process(command:str):
+def _analysis(command:str) -> list:
     split_list = command.split()
     
     if len(split_list) <= 2:
-        return command.split()
+        return split_list
+        
     command = split_list[0]
     parameter = split_list[1]
     
@@ -177,33 +178,42 @@ def _process(command:str):
     content = split_list[1:]
     return [command, content]
 
+
 # interpreter
-def analysis(mode, command):
-    global _command
-    if len(_process(command)) == 1:
-        exec(command_data[mode][_command]['code'])
-    else:
-        if _process(command)[1].startswith('-'):
-            if len(_process(command)) == 3:
-                command_data[mode][_command]['run'] = _process(command)[2]
-            exec(command_data[mode][_command]['code'][_process(command)[1]])
-        else:
-            command_data[mode][_command]['run'] = _process(command)[1]
-            exec(command_data[mode][_command]['code'])
+def _interpreter(mode, command):
+   result = _analysis(command)
+   length = len(result)
+   if length == 0:
+       pass
+   else:
+       head = result[0]
+       if length == 1:
+           exec(command_data[mode][head]['code'])
+       else:
+           if result[1].startswith(''):
+               if length == 3:
+                   command_data[mode][head]['run'] = result[2]
+               exec(command_data[mode][head]['code'][result[1]])
+           else:
+               command_data[mode][head]['run'] = result[1]
+               exec(command_data[mode][head]['code'])
 
 
 def run(command):
     global _command
-    _command = _process(command)[0] if command else ''
+    if len(_analysis(command)) > 0:
+        _command = _analysis(command)[0]
+    else:
+        _command = ''
     try:
         if _command in command_data['Global']:
-            analysis('Global', command)
+            _interpreter('Global', command)
             try:
                 del command_data['Global'][_command]['run']
             except:
                 pass
         elif _command in command_data[_mode]:
-            analysis(_mode, command)
+            _interpreter(_mode, command)
             try:
                 del command_data[_mode][_command]['run']
             except:
@@ -244,7 +254,6 @@ def _format_command():
 
 # start
 def start():
-    os.system('')
     global _command, _store, _windows, completer
     mouse_support = True if os.name == 'nt' else False
     times = 0
@@ -257,8 +266,8 @@ def start():
     ('class:body', f"HOPYBOX {_version_code} ({_version_type}, {' '.join(_version_update_time.split()[:3])}, {_version_update_time.split()[3]})\n[Python {python_version()}] on {system()}\nType \"help\" , \"copyright\" , \"version\" ,\"feedback\" or \"license\" for more information")
     ]
     style = {
-    'title': '#00ffff',
-    'head': '#00ff00',
+    'title': '#00FFFF',
+    'head': '#00FF00',
     }
     color_print(text,style,single=False)
     style = Style.from_dict({'prompt': 'yellow'})
@@ -267,7 +276,7 @@ def start():
     while True:
         _windows += 1
         try:
-            _command = session.prompt(f'[{_windows}]HOPYBOX/{_mode}:',completer=completer,style=style,mouse_support=mouse_support,auto_suggest=AutoSuggestFromHistory())
+            _command = session.prompt(f'[{_windows}]HOPYBOX/{_mode}:$',completer=completer,style=style,mouse_support=mouse_support,auto_suggest=AutoSuggestFromHistory())
             if not _command.strip():
                 continue
         except EOFError:

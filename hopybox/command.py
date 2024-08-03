@@ -2,6 +2,10 @@ from .prompt import color_print
 
 command_data = dict()
 
+
+def command_gather(text:list) -> str:
+    return ' '.join(text)
+
 def _command_add(mode, name, code, operate, details):
     if mode in command_data:
         command_data[mode][name] = {
@@ -32,7 +36,7 @@ def command_data_add():
     
     # Global
     Global = [
-    ("help","command_help()",'help [command]','To get the help about all commands'),
+    ("help","command_help()",'help','To get the help about all commands'),
     
     ("switch","_switch(command_data['Global']['switch']['run'])","switch [program|device|file|calculate]","To switch running mode"),
     
@@ -95,17 +99,17 @@ def command_data_add():
           },"tf -[p|a|v|d]",{
                               "-p": "To set the PIN code to protect the two-factor",
                               "-a": "To add the two-factor pin",
-                              "-v": "To view the two-factor token",
+                              "-v": "To view the TOTP token",
                               "-d": "To delete the two-factor key"
                             }
     ),
     
     ("translate",{
-                   "-y": "translate.YouDao().output(translate.YouDao().trans(' '.join(command_data['Program']['translate']['run']),langdet(' '.join(command_data['Program']['translate']['run']))[1]))",
-                   "-g": "print(translate.Google().trans(command_data['Program']['translate']['run'],langdet(command_data['Program']['translate']['run'])[1]))"
-                 },"translate [-(y|g) text]",{
-                                                "-y":"To translate the word into Chinese/English by YouDao",
-                                                "-g":"To translate the word into Chinese/English by Google",
+                   "-y": "translate.YouDao().output(translate.YouDao().trans(command_gather(command_data['Program']['translate']['run'][1:]),command_data['Program']['translate']['run'][0]))",
+                   "-g": "print(translate.Google().trans(command_gather(command_data['Program']['translate']['run'][1:]),command_data['Program']['translate']['run'][0]))"
+                 },"translate [-(y|g) lang text]",{
+                                                "-y":"To translate the word into other language by YouDao",
+                                                "-g":"To translate the word into other language by Google",
                                              }
     ),
 
@@ -240,7 +244,7 @@ def command_data_add():
     
     ("info","filetool(command_data['File']['info']['run']).info","info {path}","To view the information of file"),
     
-    ("scan","print(scanner(command_data['File']['scan']['run'][0],command_data['File']['scan']['run'][1]).scan_extension)","scan {path} {extension}","Scanning the path"),
+    ("scan","scanner(command_data['File']['scan']['run'][0],command_data['File']['scan']['run'][1]).scan_extension","scan {path} {extension}","Scanning the path"),
     
     ("chdir","os.chdir(command_data['File']['chdir']['run'])\ntip_tick('The working directory is switched successfully')","chdir [path]","To switch the work path"),
     

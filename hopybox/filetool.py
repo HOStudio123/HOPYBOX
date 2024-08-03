@@ -13,7 +13,7 @@ import time
 import json
 import shutil
 
-if os.name not in ["nt", "java"]:
+if os.name not in ['nt', 'java']:
     import pwd
     import grp
 
@@ -32,6 +32,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from .prompt import error_cross
 from .prompt import ask_proceed
 from .prompt import tip_tick
+from .prompt import color_print
 from .connect import browser
 from .tree import tree
 
@@ -39,137 +40,136 @@ bindings = KeyBindings()
 running = 0
 
 
-@bindings.add("c-e")
+@bindings.add('c-e')
 def exit_(event):
     event.app.exit()
 
 
-@bindings.add("c-s")
+@bindings.add('c-s')
 def return_(event):
     event.current_buffer.validate_and_handle()
 
 
 language_types = {
-    ".py": "python",
-    ".js": "javascript",
-    ".java": "java",
-    ".c": "c",
-    ".cpp": "cpp",
-    ".cs": "csharp",
-    ".html": "html",
-    ".css": "css",
-    ".xml": "xml",
-    ".sql": "sql",
-    ".rb": "ruby",
-    ".php": "php",
-    ".swift": "swift",
-    ".go": "go",
-    ".rs": "rust",
-    ".pl": "perl",
-    ".ts": "typescript",
-    ".kt": "kotlin",
-    ".sh": "shell",
-    ".ps1": "powershell",
-    ".vb": "vbnet",
-    ".m": "objc",
-    ".r": "r",
-    ".matlab": "matlab",
-    ".asm": "asm",
-    ".dart": "dart",
-    ".scala": "scala",
-    ".lua": "lua",
-    ".groovy": "groovy",
-    ".coffee": "coffeescript",
-    ".lisp": "lisp",
-    ".hs": "haskell",
-    ".jl": "julia",
-    ".erl": "erlang",
-    ".clj": "clojure",
-    ".fs": "fsharp",
-    ".tcl": "tcl",
-    ".pp": "puppet",
-    ".awk": "awk",
-    ".md": "markdown",
-    ".yaml": "yaml",
-    ".yml": "yaml",
-    ".ini": "ini",
-    ".toml": "toml",
-    ".diff": "diff",
-    ".patch": "patch",
-    ".gitmessage": "git",
-    ".properties": "properties",
-    ".cxx": "cpp",
-    ".txt": "text",
+    '.py': 'python',
+    '.js': 'javascript',
+    '.java': 'java',
+    '.c': 'c',
+    '.cpp': 'cpp',
+    '.cs': 'csharp',
+    '.html': 'html',
+    '.css': 'css',
+    '.xml': 'xml',
+    '.sql': 'sql',
+    '.rb': 'ruby',
+    '.php': 'php',
+    '.swift': 'swift',
+    '.go': 'go',
+    '.rs': 'rust',
+    '.pl': 'perl',
+    '.ts': 'typescript',
+    '.kt': 'kotlin',
+    '.sh': 'shell',
+    '.ps1': 'powershell',
+    '.vb': 'vbnet',
+    '.m': 'objc',
+    '.r': 'r',
+    '.matlab': 'matlab',
+    '.asm': 'asm',
+    '.dart': 'dart',
+    '.scala': 'scala',
+    '.lua': 'lua',
+    '.groovy': 'groovy',
+    '.coffee': 'coffeescript',
+    '.lisp': 'lisp',
+    '.hs': 'haskell',
+    '.jl': 'julia',
+    '.erl': 'erlang',
+    '.clj': 'clojure',
+    '.fs': 'fsharp',
+    '.tcl': 'tcl',
+    '.pp': 'puppet',
+    '.awk': 'awk',
+    '.md': 'markdown',
+    '.yaml': 'yaml',
+    '.yml': 'yaml',
+    '.ini': 'ini',
+    '.toml': 'toml',
+    '.diff': 'diff',
+    '.patch': 'patch',
+    '.gitmessage': 'git',
+    '.properties': 'properties',
+    '.cxx': 'cpp'
 }
 
 Console = console.Console()
 
 
 def f_time(timestamp):
-    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(timestamp))
+    return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(timestamp))
 
 
 def guess_encoding(path):
     encodings = [
-        "UTF-8",
-        "ASCII",
-        "ISO-8859-1",
-        "UTF-16",
-        "UTF-16LE",
-        "UTF-16BE",
-        "UTF-32",
-        "UTF-32LE",
-        "UTF-32BE",
-        "GBK",
-        "GB2312",
-        "Big5",
-        "EUC-JP",
-        "Shift-JIS",
-        "EUC-KR",
-        "ISO-2022-JP",
-        "ISO-8859-2",
-        "ISO-8859-3",
-        "ISO-8859-4",
-        "ISO-8859-5",
-        "ISO-8859-6",
-        "ISO-8859-7",
-        "ISO-8859-8",
-        "ISO-8859-9",
-        "ISO-8859-10",
-        "ISO-8859-13",
-        "ISO-8859-14",
-        "ISO-8859-15",
-        "ISO-8859-16",
-        "windows-1250",
-        "windows-1251",
-        "windows-1252",
-        "windows-1253",
-        "windows-1254",
-        "windows-1255",
-        "windows-1256",
-        "windows-1257",
-        "windows-1258",
-        "KOI8-R",
-        "KOI8-U",
-        "MacRoman",
-        "IBM855",
-        "IBM866",
-        "IBM852",
-        "IBM857",
-        "IBM855",
-        "IBM862",
-        "IBM864",
-        "IBM869",
-        "IBM1026",
-        "TIS-620",
-        "TSCII",
-        "VISCII",
-        "TCVN-5712",
-        "PTCP154",
+        'UTF-8',
+        'ASCII',
+        'ISO-8859-1',
+        'UTF-16',
+        'UTF-16LE',
+        'UTF-16BE',
+        'UTF-32',
+        'UTF-32LE',
+        'UTF-32BE',
+        'GBK',
+        'GB2312',
+        'Big5',
+        'EUC-JP',
+        'Shift-JIS',
+        'EUC-KR',
+        'ISO-2022-JP',
+        'ISO-8859-2',
+        'ISO-8859-3',
+        'ISO-8859-4',
+        'ISO-8859-5',
+        'ISO-8859-6',
+        'ISO-8859-7',
+        'ISO-8859-8',
+        'ISO-8859-9',
+        'ISO-8859-10',
+        'ISO-8859-13',
+        'ISO-8859-14',
+        'ISO-8859-15',
+        'ISO-8859-16',
+        'windows-1250',
+        'windows-1251',
+        'windows-1252',
+        'windows-1253',
+        'windows-1254',
+        'windows-1255',
+        'windows-1256',
+        'windows-1257',
+        'windows-1258',
+        'KOI8-R',
+        'KOI8-U',
+        'MacRoman',
+        'IBM855',
+        'IBM866',
+        'IBM852',
+        'IBM857',
+        'IBM855',
+        'IBM862',
+        'IBM864',
+        'IBM869',
+        'IBM1026',
+        'TIS-620',
+        'TSCII',
+        'VISCII',
+        'TCVN-5712',
+        'PTCP154',
     ]
     for encoding in encodings:
         try:
-            with open(path, "r", encoding=encoding) as file:
+            with open(path, 'r', encoding=encoding) as file:
                 file.read(1024)
             return encoding
         except Exception:
@@ -188,24 +188,24 @@ class Filetool:
 
     @property
     def info(self):
-        print("\033[96m[Attribute]\033[0m")
-        print(f"\033[92mName \033[0m\033[95m{self.name}\033[0m")
-        print(f"\033[92mPath \033[0m\033[95m{self.abspath}\033[0m")
-        print(f"\033[92mLanguage \033[0m\033[95m{self.lang}\033[0m")
-        print(f"\033[92mEncoding \033[0m\033[95m{self.encoding}\033[0m")
-        print(f"\033[92mPermission \033[0m\033[95m{self.permission_string} ({self.permission_code})\033[0m")
-        print(f"\033[92mSize \033[0m\033[95m{self.size}\033[0m")
-        print(f"\033[92mAccess time \033[0m\033[95m{self.a_time}\033[0m")
-        print(f"\033[92mModification time \033[0m\033[95m{self.m_time}\033[0m")
-        print(f"\033[92mOwner \033[0m\033[95m{self.owner}\033[0m")
-        print(f"\033[92mUser \033[0m\033[95m{self.user}\033[0m")
+        print('\033[96m[Attribute]\033[0m')
+        print(f'\033[92mName \033[0m\033[95m{self.name}\033[0m')
+        print(f'\033[92mPath \033[0m\033[95m{self.abspath}\033[0m')
+        print(f'\033[92mLanguage \033[0m\033[95m{self.lang}\033[0m')
+        print(f'\033[92mEncoding \033[0m\033[95m{self.encoding}\033[0m')
+        print(f'\033[92mPermission \033[0m\033[95m{self.permission_string} ({self.permission_code})\033[0m')
+        print(f'\033[92mSize \033[0m\033[95m{self.size}\033[0m')
+        print(f'\033[92mAccess time \033[0m\033[95m{self.a_time}\033[0m')
+        print(f'\033[92mModification time \033[0m\033[95m{self.m_time}\033[0m')
+        print(f'\033[92mOwner \033[0m\033[95m{self.owner}\033[0m')
+        print(f'\033[92mUser \033[0m\033[95m{self.user}\033[0m')
 
     @property
     def view(self):
         if self.extension in language_types:
-            file = open(self.path, "r", encoding=self.encoding)
+            file = open(self.path, 'r', encoding=self.encoding)
         else:
-            file = open(self.path, "rb")
+            file = open(self.path, 'rb')
         content = file.read()
         file.close()
         if self.extension in language_types:
@@ -213,7 +213,7 @@ class Filetool:
                 syntax.Syntax(
                     content,
                     language_types[self.extension],
-                    theme="ansi_dark",
+                    theme='ansi_dark',
                     line_numbers=True,
                 )
             )
@@ -227,7 +227,7 @@ class Filetool:
     @property
     def extension(self):
         extension = os.path.splitext(self.path)[1]
-        if extension != "":
+        if extension != '':
             return extension
         else:
             return None
@@ -249,7 +249,7 @@ class Filetool:
 
     @property
     def b_time(self):
-        return f_time(os.path.getctime(self.path)) if os.name == "nt" else "(No permission)"
+        return f_time(os.path.getctime(self.path)) if os.name == 'nt' else '(No permission)'
 
     @property
     def m_time(self):
@@ -265,13 +265,13 @@ class Filetool:
 
     @property
     def owner(self):
-        if os.name not in ["nt", "java"]:
+        if os.name not in ['nt', 'java']:
             return pwd.getpwuid(os.stat(self.path).st_uid).pw_name
         return None
 
     @property
     def user(self):
-        if os.name not in ["nt", "java"]:
+        if os.name not in ['nt', 'java']:
             return grp.getgrgid(os.stat(self.path).st_gid).gr_name
         return None
 
@@ -282,28 +282,28 @@ class Filetool:
         while size > 1024:
             size /= 1024
             num += 1
-        unit = ["B", "KB", "MB", "GB", "TB", "PB"]
-        return f"{size:.2f} ".rstrip(".0").zfill(1) + unit[num]
+        unit = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+        return f'{size:.2f} '.rstrip('.0').zfill(1) + unit[num]
 
     @property
     def permission_string(self):
         permissions = os.stat(self.path).st_mode
-        owner_permissions = "".join(["rwx"[i] if permissions >> (8 - i) & 0b001 else "-" for i in range(3)])
-        group_permissions = "".join(["rwx"[i] if permissions >> (5 - i) & 0b001 else "---"[i] for i in range(3)])
-        other_permissions = "".join(["rwx"[i] if permissions >> (2 - i) & 0b001 else "---"[i] for i in range(3)])
+        owner_permissions = ''.join(['rwx'[i] if permissions >> (8 - i) & 0b001 else '-' for i in range(3)])
+        group_permissions = ''.join(['rwx'[i] if permissions >> (5 - i) & 0b001 else '---'[i] for i in range(3)])
+        other_permissions = ''.join(['rwx'[i] if permissions >> (2 - i) & 0b001 else '---'[i] for i in range(3)])
         return owner_permissions + group_permissions + other_permissions
 
-default = os.path.join(os.path.expanduser("~"),".config","hopybox")
+default = os.path.join(os.path.expanduser('~'),'.config','hopybox')
 
 class Bin_system:
     def __init__(self,path=None,home=default):
         self.home_path = home
-        self.record_path = os.path.join(self.home_path, "bin.json")
+        self.record_path = os.path.join(self.home_path, 'bin.json')
         self.bin_path = os.path.join(
-            os.path.expanduser("~"), ".hopybox", ".File_Recycle"
+            os.path.expanduser('~'), '.hopybox', '.File_Recycle'
         )
         if not os.path.exists(self.record_path):
-            with open(self.record_path, "w") as f:
+            with open(self.record_path, 'w') as f:
                 json.dump({}, f)
         if path:
             self.basepath = os.path.basename(path)
@@ -311,21 +311,21 @@ class Bin_system:
             self.move_path = os.path.join(self.bin_path, self.basepath)
             if os.path.isdir(self.move_path) and os.path.isdir(path):
                 base, extension = os.path.splitext(self.basepath)
-                new_name = f"{base}_{int(time.time())}{extension}"
+                new_name = f'{base}_{int(time.time())}{extension}'
                 self.move_path = os.path.join(self.bin_path, new_name)
             else:
                 if os.path.isfile(self.move_path) and os.path.isfile(path):
                     base, extension = os.path.splitext(self.basepath)
-                    new_name = f"{base}_{int(time.time())}{extension}"
+                    new_name = f'{base}_{int(time.time())}{extension}'
                     self.move_path = os.path.join(self.bin_path, new_name)
 
     @property
     def load_records(self):
-        with open(self.record_path, "r") as f:
+        with open(self.record_path, 'r') as f:
             return json.load(f)
 
     def save_records(self, records):
-        with open(self.record_path, "w") as f:
+        with open(self.record_path, 'w') as f:
             json.dump(records, f, indent=2)
 
     @property
@@ -334,10 +334,10 @@ class Bin_system:
         shutil.move(self.abspath, self.move_path)
         records[self.basepath] = [
             self.abspath,
-            "File" if os.path.isfile(self.abspath) else "Dir",
+            'File' if os.path.isfile(self.abspath) else 'Dir',
         ]
         self.save_records(records)
-        tip_tick("Successfully moved to the file Recycle bin")
+        tip_tick('Successfully moved to the file Recycle bin')
 
     @property
     def restore(self):
@@ -348,35 +348,44 @@ class Bin_system:
             i += 1
             text = [
             ('class:line',f'[{i}]'),
+            ('',' '),
             ('class:file',f'[{records[item][1]}]'),
-            ('class:item',item)
-            
+            ('',' '),
+            ('class:item',item),
+            ('',' '),
+            ('class:size',f'({filetool(os.path.join(self.bin_path,item)).size})')
             ]
-            print(f"\033[92m[{i}] \033[96m[{records[item][1]}] \033[97m{item} \033[94m({filetool(os.path.join(self.bin_path,item)).size})")
+            style = {
+            'line':'#00FF00',
+            'file':'#00FFFF',
+            'item':'#FFFFFF',
+            'size':'#5C5CFF'
+            }
+            color_print(text,style,single=False)
             records_list.append([item, records[item]])
         back_path = records_list[
-            int(input("\033[95mWhich file do you want to restore ? \033[0m")) - 1
+            int(color_input('Which file do you want to restore ? ','#FF00FF')) - 1
         ]
         now_path = os.path.join(self.bin_path, back_path[0])
         shutil.move(now_path, back_path[1][0])
         del records[back_path[0]]
         self.save_records(records)
-        tip_tick("Successfully restored the file")
+        tip_tick('Successfully restored the file')
 
     @property
     def clear(self):
         while True:
             result = ask_proceed(
-                "This operation will permanently erase all files in the recycle bin"
+                'This operation will permanently erase all files in the recycle bin'
             )
             if result == True:
                 shutil.rmtree(self.bin_path)
                 os.mkdir(
-                    os.path.join(os.path.expanduser("~"), ".hopybox", ".File_Recycle")
+                    os.path.join(os.path.expanduser('~'), '.hopybox', '.File_Recycle')
                 )
-                with open(self.record_path, "w") as f:
+                with open(self.record_path, 'w') as f:
                     json.dump({}, f)
-                tip_tick("Successfully emptied the recycle bin")
+                tip_tick('Successfully emptied the recycle bin')
                 break
             elif result == None:
                 continue
@@ -397,9 +406,21 @@ class Scanner:
 
     @property
     def scan_extension(self):
-        with Console.status("\033[96mScanning files …\033[0m"):
+        with Console.status('[bright_cyan]Scanning files …[/bright_cyan]'):
             self._scan_dir(self.path)
-        return f"\033[92m[Result]\033[0m\n\033[95mTotal files: {self.total_file}\nFiles with extension ({self.extension}): {self.total_find}"
+        text = [
+        ('class:head','[Result]'),
+        ('','\n'),
+        ('class:total',f'Total files: {self.total_file}'),
+        ('','\n'),
+        ('class:count',f'Files with extension ({self.extension}): {self.total_find}')
+        ]
+        style = {
+        'head':'#00FF00',
+        'total':'#FF00FF',
+        'count':'#FF00FF'
+        }
+        color_print(text,style,single=False)
 
     def _scan_dir(self, path):
         for item in os.listdir(path):
@@ -414,7 +435,16 @@ class Scanner:
                     if extension == self.extension:
                         self.total_find += 1
                         size = filetool(full_path).size
-                        print(f"\033[96m{full_path} \033[94m({size})\033[0m")
+                        text = [
+                        ('class:path',full_path),
+                        ('',' '),
+                        ('class:size',f'({size})')
+                        ]
+                        style = {
+                        'path':'#00FFFF',
+                        'size':'#5C5CFF'
+                        }
+                        color_print(text,style)
 
 
 class exec_file:
@@ -426,50 +456,41 @@ class Editingtool:
     def __init__(self, filename):
         self.filename = os.path.normpath(filename)
         if os.path.isfile(self.filename):
-            with open(self.filename, "r") as f:
+            with open(self.filename, 'r') as f:
                 self.cache = f.read()
         else:
-            self.cache = ""
+            self.cache = ''
 
     def prompt_bar(self):
-        return HTML(f"<b> {self.filename} [Save:Ctrl+S] [Exit:Ctrl+E]</b>")
+        return HTML(f'<b> {self.filename} [Save:Ctrl+S] [Exit:Ctrl+E]</b>')
 
     def line_num_display(self, width, line_number, is_soft_wrap):
-        return str(line_number + 1) + " "
+        return str(line_number + 1) + ' '
 
     @property
     def edit(self):
         support_lexer = {
-            ".py": PythonLexer,
-            ".sql": SqlLexer,
-            ".html": HtmlLexer,
-            ".js": JavascriptLexer,
+            '.py': PythonLexer,
+            '.sql': SqlLexer,
+            '.html': HtmlLexer,
+            '.js': JavascriptLexer,
         }
         if os.path.splitext(self.filename)[1] in support_lexer:
-            session = PromptSession(
-                lexer=PygmentsLexer(support_lexer[os.path.splitext(self.filename)[1]])
-            )
-            text = session.prompt(
-                "1 ",
-                multiline=True,
-                key_bindings=bindings,
-                prompt_continuation=self.line_num_display,
-                bottom_toolbar=self.prompt_bar,
-                default=self.cache,
-            )
+            session = PromptSession(lexer=PygmentsLexer(support_lexer[os.path.splitext(self.filename)[1]]))
         else:
-            text = prompt(
-                "1 ",
+            session = PromptSession()
+        text = session.prompt(
+                '1 ',
                 multiline=True,
                 key_bindings=bindings,
                 prompt_continuation=self.line_num_display,
                 bottom_toolbar=self.prompt_bar,
-                default=self.cache,
+                default=self.cache
             )
         if text != None:
-            with open(self.filename, "w") as f:
+            with open(self.filename, 'w') as f:
                 f.write(text)
-            tip_tick(f"Successfully saved the text in {os.path.abspath(self.filename)}")
+            tip_tick(f'Successfully saved the text in {os.path.abspath(self.filename)}')
 
 
 scanner = Scanner

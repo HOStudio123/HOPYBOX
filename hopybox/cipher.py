@@ -105,11 +105,11 @@ class Two_factor:
     def _set_pin(self):
         if not self.detect_pin_set:
             while True:
-                pin = getpass('Please set the PIN code (at least 6 digits)\n','#00FF00')
+                pin = getpass('Set a PIN (at least 6-digit)\n','#00FF00')
                 if len(pin) >= 6:
                     self.pin_set(cipher(pin).en_sha256)
                     del pin
-                    tip_tick('Succeeded in setting the PIN code, please remember this PIN code well, which cannot be reset')
+                    tip_tick('Succeeded in setting the PIN, please remember this PIN well, which cannot be reset')
                     break
                 else:
                     error_cross_simple('This is an unreasonable input')
@@ -118,7 +118,7 @@ class Two_factor:
 
     @property
     def _verify_pin(self):
-        pin = getpass('Please enter the PIN code\n','#00FF00')
+        pin = getpass('Enter PIN\n','#00FF00')
         return self.pin_verify(pin)
 
     @property
@@ -139,7 +139,7 @@ class Two_factor:
             else:
                 error_cross_simple('This is an unreasonable input')
         else:
-            error_cross_simple('The entered PIN code is incorrect')
+            error_cross_simple('The entered PIN is incorrect')
 
     def otp_pro(self, secret):
         return pyotp.TOTP(secret).now()

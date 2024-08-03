@@ -5,17 +5,6 @@ from bs4 import BeautifulSoup
 
 from .prompt import color_print
 
-def langdet(text):
-    pat_en = re.compile(r'^[a-zA-Z]+$')
-    pat_cn = re.compile(r'^[\u4e00-\u9fff]+$')
-    if bool(pat_en.match(text.split()[0])):
-        return ['en','zh-CN']
-    elif bool(pat_cn.match(text.split()[0])):
-        return ['zh-CN','en']
-    else:
-        return None
-
-
 class NullError(Exception):
     def __init__(self):
         super().__init__('No result can be find')

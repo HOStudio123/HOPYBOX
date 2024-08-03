@@ -65,7 +65,7 @@ def color_input(text,color,single=True,html=False):
     else:
         return prompt(text,style=style)
         
-def color_print(text,color,single=True):
+def color_print(text,color,single=True,end=False):
     # beautifying output
     if single:
         text = FormattedText([('class:text',text)])
@@ -73,4 +73,7 @@ def color_print(text,color,single=True):
     else:
         text = FormattedText(text)
         style = Style.from_dict(color)
-    print(text,style=style)
+    if end != False:
+        print(text,style=style,end=end)
+    else:
+        print(text,style=style)

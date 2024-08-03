@@ -31,7 +31,8 @@ class Hoget:
 
     def main(self, url):
         self.time(True)
-        with Console().status('\033[96mLoading URL …'):
+        os,system('')
+        with Console().status('[bright_cyan]Loading URL …[/bright_cyan]'):
             res = self.content(url)
         if res.status_code == requests.codes.ok:
             self.total_time = self.time(False)

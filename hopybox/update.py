@@ -22,7 +22,7 @@ def update_program(version_number):
             while True:
                 result = ask_proceed('There is a latest stable version discovered from PyPI')
                 if result == True:
-                    os.system('python3 -m pip install -U HOPYBOX')
+                    os.system('python -m pip install -U hopybox')
                     tip_tick('Please restart the program manually')
                     exit()
                 elif result == None:
