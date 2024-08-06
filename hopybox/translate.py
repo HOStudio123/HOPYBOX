@@ -1,3 +1,9 @@
+# -*- coding:utf-8 -*-
+
+'''
+Copyright (c) 2022-2024 HOStudio123 (hostudio.hopybox@foxmail.com).
+'''
+
 import re
 
 from requests import get

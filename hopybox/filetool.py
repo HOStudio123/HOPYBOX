@@ -1,10 +1,7 @@
-#!/usr/bin/env python3
-
 # -*- coding:utf-8 -*-
 
 '''
-Copyright (c) 2022-2024 HOStudio123.
-All Rights Reserved.
+Copyright (c) 2022-2024 HOStudio123 (hostudio.hopybox@foxmail.com).
 '''
 
 import os
@@ -29,11 +26,14 @@ from pygments.lexers.javascript import JavascriptLexer
 from prompt_toolkit.formatted_text import HTML
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
-from .prompt import error_cross
+from .prompt import error_cross_simple
 from .prompt import ask_proceed
 from .prompt import tip_tick
 from .prompt import color_print
+from .prompt import color_input
+
 from .connect import browser
+
 from .tree import tree
 
 bindings = KeyBindings()
@@ -48,7 +48,6 @@ def exit_(event):
 @bindings.add('c-s')
 def return_(event):
     event.current_buffer.validate_and_handle()
-
 
 language_types = {
     '.py': 'python',
@@ -188,17 +187,27 @@ class Filetool:
 
     @property
     def info(self):
-        print('\033[96m[Attribute]\033[0m')
-        print(f'\033[92mName \033[0m\033[95m{self.name}\033[0m')
-        print(f'\033[92mPath \033[0m\033[95m{self.abspath}\033[0m')
-        print(f'\033[92mLanguage \033[0m\033[95m{self.lang}\033[0m')
-        print(f'\033[92mEncoding \033[0m\033[95m{self.encoding}\033[0m')
-        print(f'\033[92mPermission \033[0m\033[95m{self.permission_string} ({self.permission_code})\033[0m')
-        print(f'\033[92mSize \033[0m\033[95m{self.size}\033[0m')
-        print(f'\033[92mAccess time \033[0m\033[95m{self.a_time}\033[0m')
-        print(f'\033[92mModification time \033[0m\033[95m{self.m_time}\033[0m')
-        print(f'\033[92mOwner \033[0m\033[95m{self.owner}\033[0m')
-        print(f'\033[92mUser \033[0m\033[95m{self.user}\033[0m')
+        color_print('[Attribute]','#00FFFF')
+        color_print('Name','#00FF00',end=' ')
+        color_print(self.name,'#FF00FF')
+        color_print('Path','#00FF00',end=' ')
+        color_print(self.abspath,'#FF00FF')
+        color_print('Language','#00FF00',end=' ')
+        color_print(self.lang,'#FF00FF')
+        color_print('Encoding','#00FF00',end=' ')
+        color_print(self.encoding,'#FF00FF')
+        color_print('Permission','#00FF00',end=' ')
+        color_print(self.permission_string,'#FF00FF')
+        color_print('Size','#00FF00',end=' ')
+        color_print(self.size,'#FF00FF')
+        color_print('Access time','#00FF00',end=' ')
+        color_print(self.a_time,'#FF00FF')
+        color_print('Modification time','#00FF00',end=' ')
+        color_print(self.m_time,'#FF00FF')
+        color_print('Owner','#00FF00',end=' ')
+        color_print(self.owner,'#FF00FF')
+        color_print('User','#00FF00',end=' ')
+        color_print(self.user,'#FF00FF')
 
     @property
     def view(self):
@@ -292,16 +301,17 @@ class Filetool:
         group_permissions = ''.join(['rwx'[i] if permissions >> (5 - i) & 0b001 else '---'[i] for i in range(3)])
         other_permissions = ''.join(['rwx'[i] if permissions >> (2 - i) & 0b001 else '---'[i] for i in range(3)])
         return owner_permissions + group_permissions + other_permissions
+        
+filetool = Filetool
 
 default = os.path.join(os.path.expanduser('~'),'.config','hopybox')
 
 class Bin_system:
     def __init__(self,path=None,home=default):
+        self.goal_path = path
         self.home_path = home
-        self.record_path = os.path.join(self.home_path, 'bin.json')
-        self.bin_path = os.path.join(
-            os.path.expanduser('~'), '.hopybox', '.File_Recycle'
-        )
+        self.record_path = os.path.join(home, 'bin.json')
+        self.bin_path = os.path.join(home, '.File_Recycle')
         if not os.path.exists(self.record_path):
             with open(self.record_path, 'w') as f:
                 json.dump({}, f)
@@ -391,9 +401,27 @@ class Bin_system:
                 continue
             else:
                 break
-
-
-filetool = Filetool
+                
+    @property
+    def direct_remove(self):
+        try:
+            os.remove(self.abspath)
+        except:
+            shutil.rmtree(self.abspath)
+        tip_tick('Successfully remove the path permanently')
+            
+    @property
+    def super_remove(self):
+        if os.path.isfile(self.abspath):
+           size = os.path.getsize(self.abspath)
+           for i in range(7):
+               with open(self.abspath,'w+') as f:
+                   f.write('0'*size)
+               os.remove(self.abspath)
+           tip_tick('Successfully remove the path permanently')
+        else:
+            error_cross_simple('This function is only available for deleted files or files that do not exist')
+            
 bin_system = Bin_system
 
 
@@ -444,7 +472,7 @@ class Scanner:
                         'path':'#00FFFF',
                         'size':'#5C5CFF'
                         }
-                        color_print(text,style)
+                        color_print(text,style,single=False)
 
 
 class exec_file:
@@ -462,7 +490,7 @@ class Editingtool:
             self.cache = ''
 
     def prompt_bar(self):
-        return HTML(f'<b> {self.filename} [Save:Ctrl+S] [Exit:Ctrl+E]</b>')
+        return HTML(f'<b> {self.filename} [Save:^S] [Exit:^E]</b>')
 
     def line_num_display(self, width, line_number, is_soft_wrap):
         return str(line_number + 1) + ' '
@@ -490,7 +518,7 @@ class Editingtool:
         if text != None:
             with open(self.filename, 'w') as f:
                 f.write(text)
-            tip_tick(f'Successfully saved the text in {os.path.abspath(self.filename)}')
+            tip_tick(f'Successfully saved as {os.path.abspath(self.filename)}')
 
 
 scanner = Scanner

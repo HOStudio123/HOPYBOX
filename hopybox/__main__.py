@@ -1,10 +1,7 @@
-#!/usr/bin/env python3
-
 # -*- coding:utf-8 -*-
 
 '''
-Copyright (c) 2022-2024 HOStudio123.
-All Rights Reserved.
+Copyright (c) 2022-2024 HOStudio123 (hostudio.hopybox@foxmail.com).
 '''
 
 import os, re
@@ -28,6 +25,7 @@ with console.status('[bright_cyan]Loading resources …[/bright_cyan]'):
     from getpass import getuser
 
     # platform library
+    from platform import node
     from platform import system
     from platform import python_version
 
@@ -37,6 +35,7 @@ with console.status('[bright_cyan]Loading resources …[/bright_cyan]'):
     # prompt library
     from .prompt import tip_tick
     from .prompt import error_cross
+    from .prompt import error_cross_simple
     from .prompt import color_print
 
     # connect library
@@ -87,14 +86,11 @@ with console.status('[bright_cyan]Loading resources …[/bright_cyan]'):
     __author__ = 'HOStudio123'
     __email__ = 'hostudio.hopybox@foxmail.com'
     __license__ = 'GPL-3.0 license'
-    __copyright__ = 'Copyright (c) 2022-2024 HOStudio123'
+    __copyright__ = 'Copyright (c) 2022-2024 HOStudio123 (hostudio.hopybox@foxmail.com)'
     
     # mode
     _mode_type = ['Program', 'Device', 'File', 'Calculate']
     _mode = _mode_type[0]
-    
-    # windows
-    _windows = 0
     
     # version
     _version_code = '2.0.0'
@@ -128,6 +124,7 @@ def help_list_update():
     command_prompt_list = set()
     [command_prompt_list.add(j) for j in command_data['Global']]
     [command_prompt_list.add(j) for j in command_data[_mode]]
+    [command_prompt_list.add(j) for j in command_data]
 
 # plug-in
 def color(color):
@@ -148,7 +145,7 @@ def _switch(mode):
     if mode.title() in _mode_type:
         _mode = mode.title()
         completer = NestedCompleter.from_nested_dict(_format_command())
-        tip_tick('Program mode switched successfully')
+        tip_tick(f'Switched to {mode} mode successfully')
     else:
         error_cross('SwitchError', _mode, 'The mode was not found', _store.split(' ',1)[1])
 
@@ -158,53 +155,53 @@ class NotFoundCommandError(Exception):
     def __init__(self):
         super().__init__('This command was not found in this mode')
 
+class MissingParameters(Exception):
+    def __init__(self,command):
+        super().__init__(f'Missing required parameters. Type "help {command}" for more information')
+
 
 # command process
 def _analysis(command:str) -> list:
-    split_list = command.split()
-    
-    if len(split_list) <= 2:
-        return split_list
-        
-    command = split_list[0]
-    parameter = split_list[1]
-    
-    if parameter[0].startswith('-'):
-        content = split_list[2:]
-        if len(content) == 1:
-            content = content[0]
-        return [command, parameter, content]
-    
-    content = split_list[1:]
-    return [command, content]
+    return command.split()
 
 
 # interpreter
 def _interpreter(mode, command):
    result = _analysis(command)
    length = len(result)
-   if length == 0:
-       pass
-   else:
-       head = result[0]
-       if length == 1:
-           exec(command_data[mode][head]['code'])
+   command = result[0]
+   if length == 1:
+       if type(command_data[mode][command]['code']) != dict:
+           try:
+               exec(command_data[mode][command]['code'])
+           except KeyError:
+               raise MissingParameters(command)
        else:
-           if result[1].startswith(''):
-               if length == 3:
-                   command_data[mode][head]['run'] = result[2]
-               exec(command_data[mode][head]['code'][result[1]])
-           else:
-               command_data[mode][head]['run'] = result[1]
-               exec(command_data[mode][head]['code'])
+           raise MissingParameters(command)
+   else:
+       if type(command_data[mode][command]['code']) == dict:
+           for i in command_data[mode][command]['code']:
+               for j in result:
+                   if i == j:
+                       pos_par = result.index(j)
+                       if length >= 3:
+                           if pos_par == 1:
+                               command_data[mode][command]['run'] = result[2:]
+                           else:
+                               command_data[mode][command]['run'] = result[1:pos_par]
+                           break
+           exec(command_data[mode][command]['code'][result[pos_par]])
+       else:
+           command_data[mode][command]['run'] = result[1] if length < 3 else result[1:]
+           exec(command_data[mode][command]['code'])
 
 
 def run(command):
-    global _command
+    global _command, rprompt
     if len(_analysis(command)) > 0:
         _command = _analysis(command)[0]
     else:
-        _command = ''
+        _command = None
     try:
         if _command in command_data['Global']:
             _interpreter('Global', command)
@@ -221,8 +218,8 @@ def run(command):
         else:
             raise NotFoundCommandError
     except Exception as e:
-        error_cross(e.__class__.__name__, _mode, e, _store.strip())
-
+        error_cross(e.__class__.__name__, e, _command)
+    
 
 # command formatting
 def _format_command():
@@ -254,29 +251,49 @@ def _format_command():
 
 # start
 def start():
-    global _command, _store, _windows, completer
+    global _mode, _command, _store, completer, rprompt
     mouse_support = True if os.name == 'nt' else False
-    times = 0
     # start text
     text = [
     ('class:title', 'WELCOME TO HOPYBOX'),
     ('', '\n'),
     ('class:head', f'[USER:{getuser()}] [RUN:{timetool.hms}]'),
     ('', '\n'),
-    ('class:body', f"HOPYBOX {_version_code} ({_version_type}, {' '.join(_version_update_time.split()[:3])}, {_version_update_time.split()[3]})\n[Python {python_version()}] on {system()}\nType \"help\" , \"copyright\" , \"version\" ,\"feedback\" or \"license\" for more information")
+    ('class:body', f'HOPYBOX {_version_code} ({_version_type}, {" ".join(_version_update_time.split()[:3])}, {_version_update_time.split()[3]})\n[Python {python_version()}] on {system()}\nType "help", "copyright", "version", "feedback" or "license" for more information')
     ]
     style = {
     'title': '#00FFFF',
     'head': '#00FF00',
     }
     color_print(text,style,single=False)
-    style = Style.from_dict({'prompt': 'yellow'})
+    message_style = Style.from_dict({
+    'up':'#FFFF00',
+    'username':'#00FFFF',
+    'at':'#FF00FF',
+    'host':'#00FF00',
+    'mode':'#FFD700',
+    'arrow':'#FFFF00',
+    'left':'#009FF5',
+    'path':'underline #009FF5',
+    'right':'#009FF5'
+    })
     completer = NestedCompleter.from_nested_dict(_format_command())
     session = PromptSession(style=style)
     while True:
-        _windows += 1
         try:
-            _command = session.prompt(f'[{_windows}]HOPYBOX/{_mode}:$',completer=completer,style=style,mouse_support=mouse_support,auto_suggest=AutoSuggestFromHistory())
+            message = [
+            ('class:up','╭─ '),
+            ('class:mode',f'[{_mode}] '),
+            ('class:username', getuser()),
+            ('class:at', '@'),
+            ('class:host', f'{node()} '),
+            ('class:left','(📂 '),
+            ('class:path', f'{os.getcwd()}'),
+            ('class:right',')'),
+            ('','\n'),
+            ('class:arrow','╰─>  ')
+            ]
+            _command = session.prompt(message,completer=completer,style=message_style,mouse_support=mouse_support,auto_suggest=AutoSuggestFromHistory())
             if not _command.strip():
                 continue
         except EOFError:
@@ -289,4 +306,5 @@ def start():
 
 # python -m hopybox
 if __name__ == '__main__':
-    start()
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(start())

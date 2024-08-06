@@ -1,3 +1,9 @@
+# -*- coding:utf-8 -*-
+
+'''
+Copyright (c) 2022-2024 HOStudio123 (hostudio.hopybox@foxmail.com).
+'''
+
 from prompt_toolkit import prompt
 from prompt_toolkit.styles import Style
 from prompt_toolkit.formatted_text import HTML
@@ -7,7 +13,7 @@ from prompt_toolkit import print_formatted_text as print
 def ask_proceed(question:str):  
     # question prompt
     text = [
-    ('class:arrow', '➤'),
+    ('class:arrow', '➠ '),
     ('', ' '),
     ('class:text',f'{question}, Do you want to proceed ? (Y/n) ')
     ]
@@ -24,9 +30,9 @@ def ask_proceed(question:str):
         color_print(f"✗ Your response('{answer}') was not one of the expected responses: y, n",'#CD0000')
         ask_proceed(question)
 
-def error_cross(error,mode,text:str,value):
+def error_cross(error,text:str,value):
     # error output
-    color_print(f"✗ {error} in {mode}: \n '{value}' -> {text}",'#FF0000')
+    color_print(f"╭─ ✗ {error}  \n╰─> '{value}' -> {text}  ",'#FF0000')
     
 def error_cross_simple(text:str):
     # more pure error output

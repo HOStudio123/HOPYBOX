@@ -5,12 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.9.9] - 2024-08-03
+## [2.0.0] - 2024-08-03
 ### Fixed
-- Fixed some known issues
+- Fixed an issue where ord command could not use spaces
+- Fixed an issue that the scan command failed to scan
+- Fixed an issue that the remove command failed to remove
+- The md5, sha256, and sha512 commands failed to obtain the summary of strings with spaces
+- Fixed other some known issues
 
 ### Added
-- Added some new commands
+- Join AI chat
+- Added other some new commands
+
+### Changed
+- Option position changed, no longer a hard-coded command
+- Input prompt mode upgrade
+- Corrected a number of terminology errors and Updated the error reporting mode
+- The computer supports mouse mode by default
 
 ## [1.9.7] - 2024-07-17
 ### Fixed
@@ -18,6 +29,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Added some new commands
+
+### Changed
+- This version is incompatible with 1.9.6
 
 ## [1.9.6] - 2024-07-16
 ### Fixed

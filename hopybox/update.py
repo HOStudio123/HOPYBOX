@@ -1,3 +1,9 @@
+# -*- coding:utf-8 -*-
+
+'''
+Copyright (c) 2022-2024 HOStudio123 (hostudio.hopybox@foxmail.com).
+'''
+
 import os
 import requests
 
@@ -5,13 +11,25 @@ from rich.console import Console
 
 from .prompt import tip_tick
 from .prompt import ask_proceed
+from .prompt import color_print
 from .prompt import error_cross_simple
 
 console = Console()
 
 def update_log_format(version,date,content):
-    print(f"\033[96mHOPYBOX {version} Update Data\033[0m\033[92m ({date})\033[0m\n\033[95m{content}")
-
+    text = [
+    ('class:version',f'HOPYBOX {version} Update Data'),
+    ('',' '),
+    ('class:date',f'({date})'),
+    ('','\n'),
+    ('class:content',content)
+    ]
+    style = {
+    'version':'#00FFFF',
+    'date':'#00FF00',
+    'content':'#FF00FF'
+    }
+    color_print(text,style,single=False)
 def update_program(version_number):
     try:
         with console.status('[bright_cyan]Checking in version …[/bright_cyan]'):

@@ -1,7 +1,14 @@
+# -*- coding:utf-8 -*-
+
+'''
+Copyright (c) 2022-2024 HOStudio123 (hostudio.hopybox@foxmail.com).
+'''
+
 import os
 import time
 import webbrowser
 import requests
+
 from rich import syntax
 from rich.console import Console
 from rich.progress import Progress
@@ -9,9 +16,12 @@ from rich.progress import BarColumn
 from rich.progress import DownloadColumn
 from rich.progress import TransferSpeedColumn
 from rich.progress import TimeRemainingColumn
+
 from .headers import headers_water
+
 from .prompt import tip_tick
-from .prompt import error_cross
+from .prompt import error_cross_simple
+from .prompt import color_print
 
 # Disable Security Request Warning
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -31,45 +41,40 @@ class Hoget:
 
     def main(self, url):
         self.time(True)
-        os,system('')
         with Console().status('[bright_cyan]Loading URL …[/bright_cyan]'):
             res = self.content(url)
         if res.status_code == requests.codes.ok:
             self.total_time = self.time(False)
-            print(
-                f'\033[32mUniform Resource Locator\033[0m\033[95m\n{res.url}\n\033[32mRequest Duration\033[0m\033[95m\n{self.total_time} s'
-            )
-            with Console().status('\033[96mLoading information …'):
-                cache = res.content
-                print(
-                    f'\033[32mWeb Page Size\033[0m\033[95m\n{self._format_size(len(cache))}'
-                )
-                print('\033[32mHeaders\033[0m\033[95m')
-                for name, value in res.headers.items():
-                    print('* %s:%s ' % (name, value))
-                print('\033[32mRequests Headers\033[0m\033[95m')
-                for name, value in res.request.headers.items():
-                    print('* %s:%s ' % (name, value))
-                print('\033[32mCookies\033[0m\033[95m')
-                for name, value in requests.utils.dict_from_cookiejar(
-                    res.cookies
-                ).items():
-                    print('* %s:%s ' % (name, value))
-                if not requests.utils.dict_from_cookiejar(res.cookies):
-                    print('None')
-                print(f'\033[32mEncoding\033[0m\033[95m\n{res.encoding}')
-            print('\033[32mContent\033[0m')
+            color_print('Uniform Resource Locator','#00FF00')
+            color_print(res.url,'#FF00FF')
+            color_print('Request Duration','#00FF00')
+            color_print(f'{self.total_time} s','#FF00FF')
+            color_print('Headers Information','#00FF00')
+            for name, value in res.headers.items():
+                color_print(f'[{name}] ','#FF00FF',end='')
+                color_print(value,'#FFFFFF')
+            color_print('Requests Headers','#00FF00')
+            for name, value in res.request.headers.items():
+                color_print(f'[{name}] ','#FF00FF',end='')
+                color_print(value,'#FFFFFF')
+            color_print('Cookies','#00FF00')
+            for name, value in requests.utils.dict_from_cookiejar(res.cookies).items():
+                color_print(f'[{name}] ','#FF00FF',end='')
+                color_print(value,'#FFFFFF')
+            if not requests.utils.dict_from_cookiejar(res.cookies):
+                color_print('Null','#FFFFFF')
+            color_print('Encoding','#00FF00')
+            color_print(res.encoding,'#FF00FF')
+            cache = res.content
+            color_print('Web Page Size','#00FF00')
+            color_print(self._format_size(len(cache)),'#FF00FF')
+            color_print('Web Page Source','#00FF00')
             if res.encoding:
                 self.content_output(cache.decode(res.encoding))
             else:
                 print(cache)
         else:
-            error_cross(
-                f'{res.status_code} Error',
-                'Command',
-                f'{res.status_code} Error in request',
-                f'hoget {url}',
-            )
+            error_cross_simple(f'{res.status_code} Error in request')
 
     def time(self, state):
         if state:
@@ -104,7 +109,7 @@ def browser(url):
         webbrowser.open_new(url)
         tip_tick('The program has opened the URL in the browser')
     except Exception as e:
-        error_cross('OpenBrowserError', 'Command', e, f'browget {url}')
+        error_cross_simple(e)
 
 
 def download(url):
@@ -119,7 +124,7 @@ def download(url):
             TransferSpeedColumn(),
             TimeRemainingColumn(),
         ) as progress:
-            print(f'\033[95mDownloading {os.path.basename(url)}')
+            color_print(f'Downloading {os.path.basename(url)}', '#FF00FF')
             download_task = progress.add_task(None, total=total_length)
             with open(save_path, 'wb') as f:
                 for chunk in r.iter_content(chunk_size=8192):

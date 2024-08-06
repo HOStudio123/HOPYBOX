@@ -1,3 +1,9 @@
+# -*- coding:utf-8 -*-
+
+'''
+Copyright (c) 2022-2024 HOStudio123 (hostudio.hopybox@foxmail.com).
+'''
+
 import os
 import time
 import hmac
@@ -210,7 +216,7 @@ class Two_factor:
                 link.append(j[0])
             line = int(color_input('Which two-factor do you want to delete ? ','#FFFFFF'))
             if 0 < line <= len(data):
-                result = ask_proceed('Do you really want to permanently delete this two-factor ?')
+                result = ask_proceed('This action will permanently delete your two-factor authentication')
                 if result:
                     self.delete(link[line-1])
                     tip_tick('Successfully deleted the two-factor')

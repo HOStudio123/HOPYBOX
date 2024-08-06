@@ -10,6 +10,7 @@ import datetime
 import requests
 import platform
 
+from .prompt import color_print
 
 class Device:
     def name(self):
@@ -22,25 +23,39 @@ class Device:
         return platform.architecture()[0]
 
     def info(self):
-        print(f"\033[95mOperating System\033[0m {platform.system()}")
-        print(f"\033[95mOS Release\033[0m {platform.release()}")
-        print(f"\033[95mOS Version\033[0m {platform.version()}")
-        print(f"\033[95mMachine Type\033[0m {platform.machine()}")
-        print(f"\033[95mProcessor\033[0m {Device().Processor().info()}")
-        print(f"\033[95mCPU Count\033[0m {os.cpu_count()}")
-        print(f"\033[95mNode Name\033[0m {platform.node()}")
-        print(f"\033[95mLanguage\033[0m {locale.getlocale()[0]}")
-        print(f"\033[95mEncode\033[0m {locale.getlocale()[1]}")
-        print(f"\033[95mLocate IP\033[0m {Device().Web().IP().local()}")
-        print(f"\033[95mPublic IP\033[0m {Device().Web().IP().public()}")
-
+        color_print('Operating System','#FF00FF',end=' ')
+        print(platform.system())
+        color_print('OS Release','#FF00FF',end=' ')
+        print(platform.release())
+        color_print('OS Version','#FF00FF',end=' ')
+        print(platform.version())
+        color_print('Machine Type','#FF00FF',end=' ')
+        print(platform.machine())
+        color_print('Processor','#FF00FF',end=' ')
+        print(Device().Processor().info())
+        color_print('CPU Count','#FF00FF',end=' ')
+        print(os.cpu_count())
+        color_print('Node Name','#FF00FF',end=' ')
+        print(platform.node())
+        color_print('Language','#FF00FF',end=' ')
+        print(locale.getlocale()[0])
+        color_print('Encode','#FF00FF',end=' ')
+        print(locale.getlocale()[1])
+        color_print('Locate IP','#FF00FF',end=' ')
+        print(Device().Web().IP().local())
+        color_print('Public IP','#FF00FF',end=' ')
+        print(Device().Web().IP().public())
+        
     class Web:
         class IP:
             def local(self):
                 return socket.gethostbyname(socket.gethostname())
 
             def public(self):
-                return requests.get("https://api.ipify.org").text
+                try:
+                    return requests.get("https://api.ipify.org").text
+                except:
+                    return None
 
         def hostname(self):
             return socket.gethostname()

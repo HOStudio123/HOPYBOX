@@ -2,7 +2,7 @@
 ## Introduction
 An open-source and practical command box, it was made in python language, so I named it `HOPYBOX`.
 ## Installion
-- Install with `pip` or your favorite PyPI package manager.
+Install with `pip` or your favorite PyPI package manager.
 ```sh
 $ python -m pip install hopybox
 ```

@@ -1,3 +1,5 @@
+import os
+
 from .prompt import color_print
 
 command_data = dict()
@@ -36,8 +38,7 @@ def command_data_add():
     
     # Global
     Global = [
-    ("help","command_help()",'help','To get the help about all commands'),
-    
+    ("help","command_help(_mode)",'help [mode [command]|command]','To get the help about all commands'),
     ("switch","_switch(command_data['Global']['switch']['run'])","switch [program|device|file|calculate]","To switch running mode"),
     
     ("clear","clear()","clear","Clear console"),
@@ -67,7 +68,7 @@ def command_data_add():
  
     ("author","print(__author__)","author","Learn about program developer name"),
     
-    ("feedback","color_print(f'If you have any questions or suggestions, please contact the developer as {__email__}','#00FFFF',html=True)","feedback","To get the way of feedback"),
+    ("feedback","color_print(f'If you have any questions or suggestions, please contact the developer as {__email__}','#00FFFF')","feedback","To get the way of feedback"),
     
     ("update", "update_program(_version_number)", "update", "To update the version"),
     
@@ -81,15 +82,15 @@ def command_data_add():
     
     ("oct","print(oct(int(command_data['Program']['oct']['run'])).replace('0o',''))","oct [number]","Convert an integer to octal number string"),
     
-    ("ord","print(ord(command_data['Program']['ord']['run']))","ord [string]","Returns the integer representing its Unicode codepoint for a string representing a single Unicode character"),
+    ("ord","print(ord(command_data['Program']['ord']['run'] if command_data['Program']['ord']['run'] != 'blank' else ' '))","ord [string]",'Returns the integer representing its Unicode codepoint for a string representing a single Unicode character. If you want to get the blank code, use "blank" instead'),
     
     ("chr","print(chr(int(command_data['Program']['chr']['run'])))","chr [number]","Returns the string format of a character whose Unicode codepoint is the integer i"),
     
-    ("md5","print(cipher(command_data['Program']['md5']['run']).en_md5)","md5 [text]","The text is encrypted using the md5 algorithm"),
+    ("md5","print(cipher(command_gather(command_data['Program']['md5']['run'])).en_md5)","md5 [text]","The text is encrypted using the md5 algorithm"),
     
-    ("sha256","print(cipher(command_data['Program']['sha256']['run']).en_sha256)","sha256 [text]","Encrypt text with sha256 algorithm"),
+    ("sha256","print(cipher(command_gather(command_data['Program']['sha256']['run'])).en_sha256)","sha256 [text]","Encrypt text with sha256 algorithm"),
     
-    ("sha512","print(cipher(command_data['Program']['sha512']['run']).en_sha512)","sha512 [text]","Encrypt text with sha512 algorithm"),
+    ("sha512","print(cipher(command_gather(command_data['Program']['sha512']['run'])).en_sha512)","sha512 [text]","Encrypt text with sha512 algorithm"),
     
     ("tf",{
             "-p": "two_factor._set_pin",
@@ -111,9 +112,8 @@ def command_data_add():
                                                 "-y":"To translate the word into other language by YouDao",
                                                 "-g":"To translate the word into other language by Google",
                                              }
-    ),
-
-    ("download","download(command_data['Program']['download']['run'])","download [URL]","Download website resources")
+    )
+    
     ]
     
     # Device
@@ -172,11 +172,11 @@ def command_data_add():
     ),
     
     ("storage",{
-                  "-t": "print(device.Storage().total(command_data['Device']['storage']['run']))",
-                  "-u": "print(device.Storage().used(command_data['Device']['storage']['run']))",
-                  "-f": "print(device.Storage().free(command_data['Device']['storage']['run']))",
-                  "-p": "print(device.Storage().percent(command_data['Device']['storage']['run']))",
-                  "-a": "print(device.Storage().available(command_data['Device']['storage']['run']))"
+                  "-t": "print(device.Storage().total(command_data['Device']['storage']['run'][0]))",
+                  "-u": "print(device.Storage().used(command_data['Device']['storage']['run'][0]))",
+                  "-f": "print(device.Storage().free(command_data['Device']['storage']['run'][0]))",
+                  "-p": "print(device.Storage().percent(command_data['Device']['storage']['run'][0]))",
+                  "-a": "print(device.Storage().available(command_data['Device']['storage']['run'][0]))"
                },"storage [-(t|u|f|p|a) dir]",{
                                            "-t": "Used to get the total amount of storage",
                                            "-u": "Used to get the storage occupied",
@@ -223,9 +223,9 @@ def command_data_add():
     ),
     
     ("circle",{
-                 "-a": "print(calculate.Circle(float(command_data['Calculate']['circle']['run'])).area)",
-                 "-p": "print(calculate.Circle(float(command_data['Calculate']['circle']['run'])).perimeter)",
-                 "-d": "print(calculate.Circle(float(command_data['Calculate']['circle']['run'])).diameter)",
+                 "-a": "print(calculate.Circle(float(command_data['Calculate']['circle']['run'][0])).area)",
+                 "-p": "print(calculate.Circle(float(command_data['Calculate']['circle']['run'][0])).perimeter)",
+                 "-d": "print(calculate.Circle(float(command_data['Calculate']['circle']['run'][0])).diameter)",
               },"circle [-(a|p|d) radius]",{
                                               "-a":"To calculate area",                                                                                            "-p":"To calculate perimeter",
                                               "-d":"To calculate diameter"
@@ -234,9 +234,11 @@ def command_data_add():
     ]
     
     File = [
+    ('..', "os.chdir('..')", '..', 'Back to Upper level file directory'),
+
     ("workdir", "print(os.getcwd())", "workdir", "To get the work path"),
     
-    ("home", "print(os.path.expanduser('•'))","workdir","To get the home path"),
+    ("home", "print(os.path.expanduser('~'))","workdir","To get the home path"),
     
     ("tree","tree(command_data['File']['tree']['run'])", "tree {dir}","Drawing the file tree directory"),
     
@@ -250,7 +252,7 @@ def command_data_add():
     
     ("worklist","tree(os.getcwd())", "worklist", "To get the work dir list"),
     
-    ("mkdir","os.mkdir(command_data['File']['mkdir']['run'])","mkdir [dir]","To create a dir"),
+    ("mkdir","os.mkdir(command_data['File']['mkdir']['run'])\ntip_tick('This folder created successfully')","mkdir [dir]","To create a dir"),
     
     ("edit","editingtool(command_data['File']['edit']['run']).edit","edit [filname]","Used to create a new text or edit the text"),
     
@@ -264,15 +266,18 @@ def command_data_add():
     ),
     
     ("remove",{
-                 "-c": "bin_system(path=command_data['File']['remove']['run']).common_remove",
-                 "-s": "bin_system(path=command_data['File']['remove']['run']).super_remove",
-                 "-d": "bin_system(path=command_data['File']['remove']['run']).direct_remove"
+                 "-c": "bin_system(path=command_data['File']['remove']['run'][0]).common_remove",
+                 "-s": "bin_system(path=command_data['File']['remove']['run'][0]).super_remove",
+                 "-d": "bin_system(path=command_data['File']['remove']['run'][0]).direct_remove"
               },"remove [-(c|s|d) path]",{
                                             "-c":"To remove the file or the dir to the bin",
                                             "-s":"Use overwrite to remove the file or the dir directly and permanently",
                                             "-d":"To remove the file or the dir directly and permanently",
                                          }
-)
+),
+
+    ("download","download(command_data['File']['download']['run'])","download [URL]","Download website resources")
+    
     ]
     
     
@@ -288,12 +293,27 @@ def command_data_add():
         _command_add("Calculate", name, code, operate, details)
     for name, code, operate, details in File:
         _command_add("File", name, code, operate, details)
-    
-def command_help(mode=None,command=None):
+
+
+def command_help(mode):
+    if 'run' in command_data['Global']['help']:
+        help_type = command_data['Global']['help']['run']
+        if type(help_type) != list:
+            if help_type.title() in command_data:
+                _help_output(mode=help_type.title())
+            else:
+                _help_output(mode=mode,command=help_type)
+        else:
+            _help_output(mode=help_type[0].title(),command=help_type[1])
+    else:
+        _help_output()
+
+  
+def _help_output(mode=None,command=None):
     if not mode and not command:
         for _mode in command_data:
             if _mode != 'Key':
-                print('='*60)
+                print('='*os.get_terminal_size().columns)
             color_print(f'[{_mode}]','#00FF00')
             i = 0
             for _command in command_data[_mode]:
@@ -309,42 +329,47 @@ def command_help(mode=None,command=None):
                 }
                 color_print(text,style,single=False)
                 if type(command_data[_mode][_command]['help']['details']) == dict:
-                    color_print('* Options','#5C5CFF')
+                    color_print('* Options','#8C69ED')
                     for item in command_data[_mode][_command]['help']['details']:
                         print('•',item,command_data[_mode][_command]['help']['details'][item])
                 else:
-                    color_print('* Detail','#5C5CFF')
+                    color_print('* Detail','#8C69ED')
                     print('•',command_data[_mode][_command]['help']['details'])
                 if i < len(command_data[_mode]):
-                    print('-'*60)
+                    print('-'*os.get_terminal_size().columns)
     elif mode and not command:
-        for _command in command_data[_mode]:
+        i = 0
+        for _command in command_data[mode]:
             i+=1
             color_print(f'{i}.{_command}','#00ABFF')
             text = [
             ('class:head','* Usage'),
             ('','\n'),
-            ('class:body',f"• {command_data[_mode][_command]['help']['operate']}")
+            ('class:body',f"• {command_data[mode][_command]['help']['operate']}")
             ]
             style = {
             'head':'#FF00FF',
             }
             color_print(text,style,single=False)
-            if type(command_data[_mode][_command]['help']['details']) == dict:
-                color_print('* Options','#5C5CFF')
-                for item in command_data[_mode][_command]['help']['details']:
-                        print('•',item,command_data[_mode][_command]['help']['details'][item])
+            if type(command_data[mode][_command]['help']['details']) == dict:
+                color_print('* Options','#8C69ED')
+                for item in command_data[mode][_command]['help']['details']:
+                        print('•',item,command_data[mode][_command]['help']['details'][item])
             else:
-                color_print('* Detail','#5C5CFF')
-                print('•',command_data[_mode][_command]['help']['details'])
-            if i < len(command_data[_mode]):
-                print('-'*60)
+                color_print('* Detail','#8C69ED')
+                print('•',command_data[mode][_command]['help']['details'])
+            if i < len(command_data[mode]):
+                print('-'*os.get_terminal_size().columns)
     else:
-        if type(command_data[_mode][_command]['help']['details']) == dict:
-            color_print('* Options','#5C5CFF')
-            for item in command_data[_mode][_command]['help']['details']:
-                print('•',item,command_data[_mode][_command]['help']['details'][item])
+        if command in command_data['Global']:
+            mode = 'Global'
+        color_print('* Usage','#FF00FF')
+        print(f"• {command_data[mode][command]['help']['operate']}")
+        if type(command_data[mode][command]['help']['details']) == dict:
+            color_print('* Options','#8C69ED')
+            for item in command_data[mode][command]['help']['details']:
+                print('•',item,command_data[mode][command]['help']['details'][item])
         else:
-            color_print('* Detail','#5C5CFF')
-            print('•',command_data[_mode][_command]['help']['details'])        
+            color_print('* Detail','#8C69ED')
+            print('•',command_data[mode][command]['help']['details'])        
 

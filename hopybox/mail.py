@@ -1,3 +1,9 @@
+# -*- coding:utf-8 -*-
+
+'''
+Copyright (c) 2022-2024 HOStudio123 (hostudio.hopybox@foxmail.com).
+'''
+
 import os
 import smtplib
 
@@ -8,7 +14,6 @@ from email.mime.multipart import MIMEMultipart
 
 from .prompt import getpass
 from .prompt import tip_tick
-from .prompt import error_cross
 from .prompt import color_print
 from .prompt import color_input
 

@@ -1,3 +1,9 @@
+# -*- coding:utf-8 -*-
+
+'''
+Copyright (c) 2022-2024 HOStudio123 (hostudio.hopybox@foxmail.com).
+'''
+
 import cohere
 
 from .prompt import getpass
@@ -15,6 +21,8 @@ class CoralAI:
         while True:
             try:
                 message = color_input('(You) ','#EB7A16')
+                if not message.strip():
+                    continue
                 self._process(message)
             except EOFError:
                 break
