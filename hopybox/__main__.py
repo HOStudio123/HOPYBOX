@@ -98,7 +98,7 @@ with console.status('[bright_cyan]Loading resources …[/bright_cyan]'):
     _version_type = 'default'
     _version_info = f'* HOPYBOX Version {_version_code}\n* Python Version {python_version()}'
     _version_update_content = '* Fixed some known issues\n* Add some new commands'
-    _version_update_time = 'Aug 03 2024 12:03:00'
+    _version_update_time = 'Aug 06 2024 14:13:00'
     
     # command
     command_data_add()
