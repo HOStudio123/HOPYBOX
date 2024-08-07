@@ -39,21 +39,15 @@ $ pip install -U hopybox
 ```
 ## License
 ```
-HOPYBOX - An open-source and practical command box.
-Copyright (C) 2024  HOStudio123
+Copyright (c) 2022-2024 HOStudio123 (hostudio.hopybox@foxmail.com)
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+HOPYBOX is an open-source command box released under the GPL Version 3 license. 
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+This means that you are free to use, distribute, and modify the software, but you must comply with the terms and conditions of the GPL Version 3 license. 
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+The software is provided free of charge, but WITHOUT ANY WARRANTY, including the implied warranties of MERCHANTABILITY and FITNESS FOR A PARTICULAR PURPOSE. 
+
+You can visit <https://www.gnu.org/licenses/> to view the details of the GPL Version 3 license.
 ```
 
 ## Docs
