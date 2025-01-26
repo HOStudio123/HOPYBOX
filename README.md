@@ -39,7 +39,7 @@ $ pip install -U hopybox
 ```
 ## License
 ```
-Copyright (c) 2022-2024 HOStudio123 (hostudio.hopybox@foxmail.com)
+Copyright (c) 2022-2025 HOStudio123 (hostudio.hopybox@foxmail.com)
 
 HOPYBOX is an open-source command box released under the GPL Version 3 license. 
 
